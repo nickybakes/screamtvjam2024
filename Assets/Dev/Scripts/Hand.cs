@@ -52,7 +52,9 @@ public class Hand : MonoBehaviour {
 	///		Check to see if a finger is at a specific index
 	/// </summary>
 	/// <param name="index">The index of the finger to check</param>
-	/// <returns><strong>true</strong> if the finger at the specified index is not null, <strong>false</strong> otherwise</returns>
+	/// <returns>
+	///		<strong>true</strong> if the finger at the specified index is not null, <strong>false</strong> otherwise
+	/// </returns>
 	public bool IsFingerAtIndex (int index) {
 		switch (index) {
 			case 0:

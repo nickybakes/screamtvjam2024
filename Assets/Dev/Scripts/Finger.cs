@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Finger : MonoBehaviour {
 	[Header("Properties")]
-	[SerializeField] private int _heath;
+	[SerializeField] private int _health;
 
 	/// <summary>
 	///		The current health of this finger
 	/// </summary>
-	public int Health { get => _heath; set => _heath = value; }
+	public int Health { get => _health; set => _health = value; }
 }
