@@ -76,12 +76,17 @@ public class Hand : MonoBehaviour {
 	public bool IsRightHand => _isRightHand;
 
 	/// <summary>
-	///		Check to see if a finger is at a specific index
+	///		Convert a regular finger index to a handed finger index
 	/// </summary>
-	/// <param name="index">The index of the finger to check</param>
-	/// <returns>
-	///		A reference to the finger if there is one at the index, null otherwise
-	/// </returns>
+	/// <param name="index">The index to convert</param>
+	/// <returns>A handed index</returns>
+	private FingerType GetHandedFingerTypeFromIndex (int index) => (FingerType) (IsRightHand ? index : 4 - index);
+
+	/// <summary>
+	///		Get a finger at the specified index
+	/// </summary>
+	/// <param name="index">The index of the finger to get</param>
+	/// <returns>A reference to the finger if there is one at the index, null otherwise</returns>
 	public Finger GetFingerAtIndex (int index) {
 		// If the index is out of range of the dictionary, return null
 		if (index < 0 || index > 4) {
@@ -89,18 +94,21 @@ public class Hand : MonoBehaviour {
 			return null;
 		}
 
-		return fingerDictionary[(FingerType) (IsRightHand ? index : 4 - index)];
+		return fingerDictionary[GetHandedFingerTypeFromIndex(index)];
 	}
 
-	public void RemoveFingerAtIndex (int index) {
-		// Get the finger at the specified index
-		Finger finger = GetFingerAtIndex(index);
-
-		// If the finger is equal to null, then return and remove nothing
-		if (!finger) {
+	/// <summary>
+	///		Set a finger at the specified index
+	/// </summary>
+	/// <param name="index">The index of the finger to set</param>
+	/// <param name="finger">The new finger reference to set, can be set to null to remove the finger</param>
+	public void SetFingerAtIndex (int index, Finger finger) {
+		// If the index is out of range of the dictionary, return null
+		if (index < 0 || index > 4) {
+			Debug.LogWarning("Finger index out of range.");
 			return;
 		}
 
-
+		fingerDictionary[GetHandedFingerTypeFromIndex(index)] = finger;
 	}
 }
