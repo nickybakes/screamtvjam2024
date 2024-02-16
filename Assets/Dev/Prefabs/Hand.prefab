@@ -49,11 +49,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 835813ec40928924ebb37340b158f542, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _thumb: {fileID: 4300791126851280908}
-  _indexFinger: {fileID: 8457930050924422245}
-  _middleFinger: {fileID: 6716175877025221776}
-  _ringFinger: {fileID: 547896849471649544}
-  _pinkyFinger: {fileID: 5139294074300144855}
+  fingerDictionary:
+    m_keys: 0000000001000000020000000300000004000000
+    m_values:
+    - {fileID: 4300791126851280908}
+    - {fileID: 8457930050924422245}
+    - {fileID: 6716175877025221776}
+    - {fileID: 547896849471649544}
+    - {fileID: 5139294074300144855}
   _isRightHand: 0
 --- !u!1001 &273447591611101304
 PrefabInstance:
