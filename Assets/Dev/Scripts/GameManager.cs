@@ -4,6 +4,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum GameState {
+	CREATING_BOARD, CHOOSING_DIE, ROLLING_DIE, SELECTING_FINGER, CHOPPING_FINGER
+}
+
 public class GameManager : MonoBehaviour {
 	[Header("References")]
 	[SerializeField] private Person _player;
@@ -14,6 +18,7 @@ public class GameManager : MonoBehaviour {
 	[SerializeField] private int _selectedDieIndex;
 	[SerializeField] private Die[ ] currentDice;
 	[SerializeField] private Item[ ] currentItems;
+	[SerializeField] private GameState _gameState;
 	[Header("Test")]
 	[SerializeField] private List<GameObject> dicePrefabs;
 	[SerializeField] private List<Transform> diceButtons;
@@ -77,33 +82,61 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	public GameState GameState {
+		get => _gameState;
+		set {
+			_gameState = value;
+
+			switch (_gameState) {
+				case GameState.CREATING_BOARD:
+					// Generate starting dice
+					PlaceRandomDie(0);
+					PlaceRandomDie(1);
+					PlaceRandomDie(2);
+
+					// Generate starting items
+					PlaceRandomItem(0);
+					PlaceRandomItem(1);
+					PlaceRandomItem(2);
+					PlaceRandomItem(3);
+					PlaceRandomItem(4);
+
+					break;
+				case GameState.CHOOSING_DIE:
+					break;
+				case GameState.ROLLING_DIE:
+					break;
+				case GameState.SELECTING_FINGER:
+					break;
+				case GameState.CHOPPING_FINGER:
+					break;
+			}
+		}
+	}
+
 	private void Awake ( ) {
 		currentDice = new Die[3];
 		currentItems = new Item[5];
 	}
 
 	private void Start ( ) {
-		// Generate starting dice
-		PlaceRandomDie(0);
-		PlaceRandomDie(1);
-		PlaceRandomDie(2);
-
-		// Generate starting items
-		PlaceRandomItem(0);
-		PlaceRandomItem(1);
-		PlaceRandomItem(2);
-		PlaceRandomItem(3);
-		PlaceRandomItem(4);
+		GameState = GameState.CREATING_BOARD;
 
 		IsPlayerTurn = true;
 	}
 
 	private void Update ( ) {
-		if (IsPlayerTurn) {
-			// Player will be selecting hand and die to use
-			// Player then hits the "confirm" button to roll the die
-		} else {
-
+		switch (GameState) {
+			case GameState.CREATING_BOARD:
+				break;
+			case GameState.CHOOSING_DIE:
+				break;
+			case GameState.ROLLING_DIE:
+				break;
+			case GameState.SELECTING_FINGER:
+				break;
+			case GameState.CHOPPING_FINGER:
+				break;
 		}
 	}
 
