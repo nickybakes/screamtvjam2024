@@ -7,8 +7,7 @@ public class ItemManager : MonoBehaviour {
 	[SerializeField] private List<GameObject> itemPrefabs;
 	[Header("Properties")]
 	[SerializeField] private int itemCount;
-	[SerializeField] private float itemRadius;
-	[SerializeField, Range(0, Mathf.PI * 2)] private float itemOffsetRadians;
+	[SerializeField] private float itemLineLength;
 	[Space]
 	[SerializeField] private Item[ ] currentItems;
 
@@ -21,16 +20,16 @@ public class ItemManager : MonoBehaviour {
 	}
 
 	private void OnValidate ( ) {
-		// Make sure the number of dice positions is correct
+		// Make sure the number of item positions is correct
 		if (transform.childCount != itemCount) {
 			Debug.LogWarning("Need to adjust the item position count!");
 			return;
 		}
 
-		// Make dice points in a circle on the table
-		List<Vector3> dicePoints = Utils.GetSpacedPointsOnCircle(transform.position, itemRadius, itemOffsetRadians, itemCount);
+		// Make item points in a line on the table
+		List<Vector3> itemPoints = Utils.GetSpacedPointsOnLine(transform.position, itemLineLength, itemCount);
 		for (int i = 0; i < itemCount; i++) {
-			transform.GetChild(i).position = dicePoints[i];
+			transform.GetChild(i).position = itemPoints[i];
 		}
 	}
 
