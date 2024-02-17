@@ -22,6 +22,11 @@ public class Finger : MonoBehaviour {
 	}
 
 	private void OnMouseDown ( ) {
+		// If a finger cannot currently be selected, then return from this function
+		if (!gameManager.CanSelectFinger) {
+			return;
+		}
+
 		gameManager.SelectedFinger = this;
 	}
 }

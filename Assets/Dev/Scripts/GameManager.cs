@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public enum GameState {
-	CREATING_BOARD, CHOOSING_DIE, ROLLING_DIE, CHOPPING_FINGER
+	CREATING_BOARD, CHOOSING_DIE, CHOOSING_ITEM, ROLLING_DIE, CHOPPING_FINGER
 }
 
 public class GameManager : MonoBehaviour {
@@ -17,19 +17,18 @@ public class GameManager : MonoBehaviour {
 	[Header("Properties")]
 	[SerializeField] private GameState _gameState;
 	[SerializeField] private Person _activePerson;
-	[SerializeField] private int _selectedHandIndex;
-	[SerializeField] private int _selectedDieIndex;
+	[Space]
+	[SerializeField] private bool _canSelectDie;
+	[SerializeField] private Die _selectedDie;
+	[Space]
+	[SerializeField] private bool _canSelectItem;
+	[SerializeField] private Item _selectedItem;
+	[Space]
+	[SerializeField] private bool _canSelectFinger;
 	[SerializeField] private Finger _selectedFinger;
+	[Space]
+	[SerializeField] private bool _canSelectHand;
 	[SerializeField] private Hand _selectedHand;
-	[Header("Test Fields")]
-	[SerializeField] private List<GameObject> dicePrefabs;
-	[SerializeField] private List<Transform> diceButtons;
-	[SerializeField] private List<GameObject> itemPrefabs;
-	[SerializeField] private List<Transform> itemButtons;
-	[SerializeField] private Transform leftHandButton;
-	[SerializeField] private Transform rightHandButton;
-	[SerializeField] private TextMeshProUGUI eventText;
-	[SerializeField] private TextMeshProUGUI rollText;
 
 	/// <summary>
 	///		The current state of the game
@@ -44,65 +43,60 @@ public class GameManager : MonoBehaviour {
 					StartCoroutine(CreateBoardState( ));
 					break;
 				case GameState.CHOOSING_DIE:
+					StartCoroutine(ChoosingDieState( ));
 					break;
 				case GameState.ROLLING_DIE:
+					StartCoroutine(RollingDieState( ));
 					break;
-				case GameState.CHOPPING_FINGER:
+				default:
+					Debug.LogWarning("There is no coroutine for the currently selected game state!");
 					break;
 			}
 		}
 	}
 
 	/// <summary>
-	///		Whether or not it is the players turn
+	///		The currently active person, or the person whose turn it is
 	/// </summary>
-	public Person ActivePerson {
-		get => _activePerson;
-		private set {
-			// If the turn in the game has changed, reset selected options
-			if (_activePerson != value) {
-				SelectedHandIndex = -1;
-				SelectedDieIndex = -1;
-			}
-
-			_activePerson = value;
-		}
-	}
+	public Person ActivePerson { get => _activePerson; private set => _activePerson = value; }
 
 	/// <summary>
-	///		The currently selected die index
+	///		Whether or not a die can be selected
 	/// </summary>
-	public int SelectedDieIndex {
-		get => _selectedDieIndex;
-		set {
-			_selectedDieIndex = value;
-
-			for (int i = 0; i < diceButtons.Count; i++) {
-				diceButtons[i].GetComponent<Image>( ).color = (_selectedDieIndex == i ? Color.red : Color.white);
-			}
-		}
-	}
+	public bool CanSelectDie { get => _canSelectDie; set => _canSelectDie = value; }
 
 	/// <summary>
-	///		The currently selected hand
+	///		The currently selected die
 	/// </summary>
-	public int SelectedHandIndex {
-		get => _selectedHandIndex;
-		set {
-			_selectedHandIndex = value;
-
-			leftHandButton.GetComponent<Image>( ).color = (_selectedHandIndex == 0 ? Color.red : Color.white);
-			rightHandButton.GetComponent<Image>( ).color = (_selectedHandIndex == 1 ? Color.red : Color.white);
-		}
-	}
+	public Die SelectedDie { get => _selectedDie; set => _selectedDie = value; }
 
 	/// <summary>
-	///		The currently selected finger on the board
+	///		Whether or not an item can be selected
+	/// </summary>
+	public bool CanSelectItem { get => _canSelectItem; set => _canSelectItem = value; }
+
+	/// <summary>
+	///		The currently selected item
+	/// </summary>
+	public Item SelectedItem { get => _selectedItem; set => _selectedItem = value; }
+
+	/// <summary>
+	///		Whether or not a finger can be selected
+	/// </summary>
+	public bool CanSelectFinger { get => _canSelectFinger; set => _canSelectFinger = value; }
+
+	/// <summary>
+	///		The currently selected finger
 	/// </summary>
 	public Finger SelectedFinger { get => _selectedFinger; set => _selectedFinger = value; }
 
 	/// <summary>
-	///		The currently selected hand on the board
+	///		Whether or not a hand can be selected
+	/// </summary>
+	public bool CanSelectHand { get => _canSelectHand; set => _canSelectHand = value; }
+
+	/// <summary>
+	///		The currently selected hand
 	/// </summary>
 	public Hand SelectedHand { get => _selectedHand; set => _selectedHand = value; }
 
@@ -113,6 +107,11 @@ public class GameManager : MonoBehaviour {
 
 	private void Awake ( ) {
 		OnValidate( );
+
+		CanSelectDie = false;
+		CanSelectItem = false;
+		CanSelectFinger = false;
+		CanSelectHand = false;
 	}
 
 	private void Start ( ) {
@@ -139,7 +138,31 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private IEnumerator ChoosingDieState ( ) {
+		// Allow the active person to select a dice
+		CanSelectDie = true;
 
+		// Wait for the active person to make a selection
+		yield return new WaitUntil(( ) => SelectedDie != null);
+		CanSelectDie = false;
+		Debug.Log($"Die was selected: {SelectedDie}");
+
+		GameState = GameState.ROLLING_DIE;
+
+		yield return null;
+	}
+
+	private IEnumerator RollingDieState ( ) {
+		// Roll the dice
+		int dieValue = SelectedDie.Roll( );
+		Debug.Log($"Die was rolled for a value of {dieValue}");
+
+		// Remove the selected die from the list of dice and replace it with a new die
+		diceManager.ActiveDice[SelectedDie.Index] = null;
+		diceManager.PlaceRandomDieAt(SelectedDie.Index);
+		Destroy(SelectedDie.gameObject);
+		SelectedDie = null;
+
+		GameState = GameState.CHOOSING_DIE;
 
 		yield return null;
 	}

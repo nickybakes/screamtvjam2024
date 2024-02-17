@@ -10,7 +10,9 @@ public class DiceManager : MonoBehaviour {
 	[SerializeField] private float diceRadius;
 	[SerializeField, Range(0, Mathf.PI * 2)] private float diceOffsetRadians;
 	[Space]
-	[SerializeField] private Die[ ] currentDice;
+	[SerializeField] private Die[ ] _activeDice;
+
+	public Die[ ] ActiveDice { get => _activeDice; private set => _activeDice = value; }
 
 	public void OnDrawGizmos ( ) {
 		Gizmos.color = Color.blue;
@@ -37,7 +39,7 @@ public class DiceManager : MonoBehaviour {
 	private void Awake ( ) {
 		OnValidate( );
 
-		currentDice = new Die[diceCount];
+		ActiveDice = new Die[diceCount];
 	}
 
 	public void PlaceRandomDieAt (int index) {
@@ -45,7 +47,8 @@ public class DiceManager : MonoBehaviour {
 		Transform diePosition = transform.GetChild(index);
 		Die randomDie = Instantiate(randomDiePrefab, diePosition).GetComponent<Die>( );
 
-		Debug.Log($"Generating random die: {randomDie.DieString}");
-		currentDice[index] = randomDie;
+		Debug.Log($"Generating random die: {randomDie}");
+		ActiveDice[index] = randomDie;
+		randomDie.Index = index;
 	}
 }

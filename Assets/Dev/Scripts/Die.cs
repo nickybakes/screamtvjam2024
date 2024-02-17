@@ -4,25 +4,32 @@ using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 
 public class Die : MonoBehaviour {
-	[Header("Properties")]
+	[Header("References")]
+	[SerializeField] private GameManager gameManager;
 	[SerializeField] private List<int> faceValues;
+	[Header("Properties")]
+	[SerializeField] private int _index;
 
 	/// <summary>
-	///		Get the face values of this die in string form
+	///		The index of this die in the dice manager list
 	/// </summary>
-	public string DieString {
-		get {
-			string dieString = "";
-			for (int i = 0; i < faceValues.Count; i++) {
-				dieString += faceValues[i];
+	public int Index { get => _index; set => _index = value; }
 
-				if (i < faceValues.Count - 1) {
-					dieString += " ";
-				}
-			}
+	private void OnValidate ( ) {
+		gameManager = FindObjectOfType<GameManager>( );
+	}
 
-			return dieString;
+	private void Awake ( ) {
+		OnValidate( );
+	}
+
+	private void OnMouseDown ( ) {
+		// If a die cannot currently be selected, then return from this function
+		if (!gameManager.CanSelectDie) {
+			return;
 		}
+
+		gameManager.SelectedDie = this;
 	}
 
 	/// <summary>
@@ -30,4 +37,17 @@ public class Die : MonoBehaviour {
 	/// </summary>
 	/// <returns>A random integer face value on the die</returns>
 	public int Roll ( ) => faceValues[Random.Range(0, faceValues.Count)];
+
+	public override string ToString ( ) {
+		string dieString = "";
+		for (int i = 0; i < faceValues.Count; i++) {
+			dieString += faceValues[i];
+
+			if (i < faceValues.Count - 1) {
+				dieString += " ";
+			}
+		}
+
+		return dieString;
+	}
 }

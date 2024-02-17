@@ -17,6 +17,11 @@ public class Palm : MonoBehaviour {
 	}
 
 	private void OnMouseDown ( ) {
+		// If a hand cannot currently be selected, then return from this function
+		if (!gameManager.CanSelectHand) {
+			return;
+		}
+
 		gameManager.SelectedHand = hand;
 	}
 }
