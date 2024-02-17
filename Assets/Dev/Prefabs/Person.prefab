@@ -113,6 +113,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6516233543435052614, guid: 4a42282126e56644288f644dff69812f,
         type: 3}
+      propertyPath: _handType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6516233543435052614, guid: 4a42282126e56644288f644dff69812f,
+        type: 3}
       propertyPath: _isRightHand
       value: 1
       objectReference: {fileID: 0}
@@ -200,6 +205,11 @@ PrefabInstance:
     - target: {fileID: 1002809704256071389, guid: 4a42282126e56644288f644dff69812f,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6516233543435052614, guid: 4a42282126e56644288f644dff69812f,
+        type: 3}
+      propertyPath: _handType
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

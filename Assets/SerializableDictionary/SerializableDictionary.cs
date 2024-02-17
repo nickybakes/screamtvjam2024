@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
+
+// https://github.com/azixMcAze/Unity-SerializableDictionary
 
 #region Custom Dictionaries
 

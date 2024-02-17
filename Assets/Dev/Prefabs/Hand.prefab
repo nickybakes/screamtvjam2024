@@ -57,7 +57,7 @@ MonoBehaviour:
     - {fileID: 6716175877025221776}
     - {fileID: 547896849471649544}
     - {fileID: 5139294074300144855}
-  _isRightHand: 0
+  _handType: 2
 --- !u!1001 &273447591611101304
 PrefabInstance:
   m_ObjectHideFlags: 0
