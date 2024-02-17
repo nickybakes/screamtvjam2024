@@ -11,7 +11,7 @@ PrefabInstance:
     - target: {fileID: 803559696000582924, guid: 4a42282126e56644288f644dff69812f,
         type: 3}
       propertyPath: m_Name
-      value: Right Hand Variant
+      value: Right Hand
       objectReference: {fileID: 0}
     - target: {fileID: 1002809704256071389, guid: 4a42282126e56644288f644dff69812f,
         type: 3}
@@ -63,6 +63,31 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1039655826356037037, guid: 4a42282126e56644288f644dff69812f,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3627762205926273705, guid: 4a42282126e56644288f644dff69812f,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4657418387007283652, guid: 4a42282126e56644288f644dff69812f,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5953531535324745031, guid: 4a42282126e56644288f644dff69812f,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5953531535324745031, guid: 4a42282126e56644288f644dff69812f,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6516233543435052614, guid: 4a42282126e56644288f644dff69812f,
         type: 3}
       propertyPath: _handType
@@ -98,6 +123,11 @@ PrefabInstance:
       propertyPath: _fingers.Array.data[4]
       value: 
       objectReference: {fileID: 3635838418462590073}
+    - target: {fileID: 8255260236104636790, guid: 4a42282126e56644288f644dff69812f,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

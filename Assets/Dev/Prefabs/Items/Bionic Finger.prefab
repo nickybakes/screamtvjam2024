@@ -8,6 +8,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1488570325218146234, guid: 03374007884a1a240b741eda1ac8da74,
+        type: 3}
+      propertyPath: _name
+      value: Bionic Finger
+      objectReference: {fileID: 0}
     - target: {fileID: 8198446265344732993, guid: 03374007884a1a240b741eda1ac8da74,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -61,7 +66,7 @@ PrefabInstance:
     - target: {fileID: 8732528088860608163, guid: 03374007884a1a240b741eda1ac8da74,
         type: 3}
       propertyPath: m_Name
-      value: Bionic Finger Item Variant
+      value: Bionic Finger
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -5,20 +5,22 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public enum GameState {
-	CREATING_BOARD, CHOOSING_DIE, ROLLING_DIE, SELECTING_FINGER, CHOPPING_FINGER
+	CREATING_BOARD, CHOOSING_DIE, ROLLING_DIE, CHOPPING_FINGER
 }
 
 public class GameManager : MonoBehaviour {
 	[Header("References")]
-	[SerializeField] private Person _player;
-	[SerializeField] private Person _opponent;
-	[SerializeField] private Die[ ] currentDice;
-	[SerializeField] private Item[ ] currentItems;
+	[SerializeField] private Person player;
+	[SerializeField] private Person opponent;
+	[SerializeField] private DiceManager diceManager;
+	[SerializeField] private ItemManager itemManager;
 	[Header("Properties")]
 	[SerializeField] private GameState _gameState;
-	[SerializeField] private bool _isPlayerTurn;
+	[SerializeField] private Person _activePerson;
 	[SerializeField] private int _selectedHandIndex;
 	[SerializeField] private int _selectedDieIndex;
+	[SerializeField] private Finger _selectedFinger;
+	[SerializeField] private Hand _selectedHand;
 	[Header("Test Fields")]
 	[SerializeField] private List<GameObject> dicePrefabs;
 	[SerializeField] private List<Transform> diceButtons;
@@ -30,28 +32,28 @@ public class GameManager : MonoBehaviour {
 	[SerializeField] private TextMeshProUGUI rollText;
 
 	/// <summary>
-	///		A reference to the player
+	///		The currently selected finger on the board
 	/// </summary>
-	public Person Player { get => _player; private set => _player = value; }
+	public Finger SelectedFinger { get => _selectedFinger; set => _selectedFinger = value; }
 
 	/// <summary>
-	///		A reference to the opponent
+	///		The currently selected hand on the board
 	/// </summary>
-	public Person Opponent { get => _opponent; private set => _opponent = value; }
+	public Hand SelectedHand { get => _selectedHand; set => _selectedHand = value; }
 
 	/// <summary>
 	///		Whether or not it is the players turn
 	/// </summary>
-	public bool IsPlayerTurn {
-		get => _isPlayerTurn;
+	public Person ActivePerson {
+		get => _activePerson;
 		private set {
 			// If the turn in the game has changed, reset selected options
-			if (_isPlayerTurn != value) {
+			if (_activePerson != value) {
 				SelectedHandIndex = -1;
 				SelectedDieIndex = -1;
 			}
 
-			_isPlayerTurn = value;
+			_activePerson = value;
 		}
 	}
 
@@ -89,39 +91,27 @@ public class GameManager : MonoBehaviour {
 
 			switch (_gameState) {
 				case GameState.CREATING_BOARD:
-					// Generate starting dice
-					PlaceRandomDieAt(0);
-					PlaceRandomDieAt(1);
-					PlaceRandomDieAt(2);
-
-					// Generate starting items
-					PlaceRandomItemAt(0);
-					PlaceRandomItemAt(1);
-					PlaceRandomItemAt(2);
-					PlaceRandomItemAt(3);
-					PlaceRandomItemAt(4);
-
 					break;
 				case GameState.CHOOSING_DIE:
 					break;
 				case GameState.ROLLING_DIE:
-					break;
-				case GameState.SELECTING_FINGER:
+					ConsumeDieAt(SelectedDieIndex);
+
 					break;
 				case GameState.CHOPPING_FINGER:
+
+
 					break;
 			}
 		}
 	}
 
 	private void Awake ( ) {
-		currentDice = new Die[3];
-		currentItems = new Item[5];
 	}
 
 	private void Start ( ) {
-		GameState = GameState.CREATING_BOARD;
-		IsPlayerTurn = true;
+		// GameState = GameState.CREATING_BOARD;
+		// ActivePerson = player;
 	}
 
 	private void Update ( ) {
@@ -132,42 +122,44 @@ public class GameManager : MonoBehaviour {
 				break;
 			case GameState.ROLLING_DIE:
 				break;
-			case GameState.SELECTING_FINGER:
-				break;
 			case GameState.CHOPPING_FINGER:
 				break;
 		}
 	}
 
-	// Some of these functions will probably need to be coroutines since some have animations that need to play with them
-	// For example, when placing a die, the die will need to float in from the side or something, meaning the game loop needs to wait for it to finish
+	// NOTE: Some of these functions will probably need to be coroutines since some have animations that need to play with them
+	// NOTE: For example, when placing a die, the die will need to float in from the side or something, meaning the game loop needs to wait for it to finish
 
 	/// <summary>
 	///		Consume a die at the specified index by rolling it
 	/// </summary>
 	/// <param name="index">The index of the die to roll</param>
 	/// <returns>An integer value that is the random value on the die when it was rolled</returns>
-	private int ConsumeDieAt (int index) {
+	private void ConsumeDieAt (int index) {
 		// Roll the die at the selected index to get a random value
-		int dieValue = currentDice[index].Roll( );
+		// int dieValue = currentDice[index].Roll( );
+
+		// rollText.text = $"Roll: {dieValue}";
+		// AddEventText($"{ActivePerson.name} rolls a {dieValue}.");
 
 		// Remove the die that was used
-		currentDice[index] = null;
+		// currentDice[index] = null;
 
-		return dieValue;
-	}
+		// Get the finger at the dice roll value
+		// Finger finger = ActivePerson.GetFingerAt(SelectedHandIndex, dieValue);
 
-	/// <summary>
-	///		Place a random die on the board at the specified index
-	/// </summary>
-	/// <returns>The die object that was placed on the board</returns>
-	private Die PlaceRandomDieAt (int index) {
-		Die randomDie = dicePrefabs[Random.Range(0, dicePrefabs.Count)].GetComponent<Die>( );
+		/*
+		// Determine what the player can do based on the dice roll
+		if (finger != null) {
+			AddEventText($"There is a finger at the die value, so {ActivePerson.name} gets to use an item.");
+		} else {
+			AddEventText($"There is not a finger at the die value, so {ActivePerson.name} gets to chop off a finger.");
+		}
+		*/
 
-		currentDice[index] = randomDie;
-		diceButtons[index].GetComponentInChildren<TextMeshProUGUI>( ).text = "Select Die\n" + randomDie.DieString;
-
-		return randomDie;
+		// NOTE: Right now, the only thing that the player will be able to do is chop off a finger
+		// AddEventText($"Cannot select items yet, so {ActivePerson.name} gets to chop off a finger.");
+		GameState = GameState.CHOPPING_FINGER;
 	}
 
 	/// <summary>
@@ -176,22 +168,9 @@ public class GameManager : MonoBehaviour {
 	/// <param name="index">The index of the item to use</param>
 	private void ConsumeItemAt (int index) {
 		// Remove the item that was used
-		currentItems[index] = null;
+		// currentItems[index] = null;
 
 		// There will be more code here to actually use the item
-	}
-
-	/// <summary>
-	///		Place a random item on the board at the specified index
-	/// </summary>
-	/// <returns>The item object that was placed on the board</returns>
-	private Item PlaceRandomItemAt (int index) {
-		Item randomItem = itemPrefabs[Random.Range(0, itemPrefabs.Count)].GetComponent<Item>( );
-
-		currentItems[index] = randomItem;
-		itemButtons[index].GetComponentInChildren<TextMeshProUGUI>( ).text = randomItem.name;
-
-		return randomItem;
 	}
 
 	/// <summary>
@@ -200,35 +179,16 @@ public class GameManager : MonoBehaviour {
 	/// <param name="person">The person making the turn</param>
 	public void ConfirmTurnSelection (Person person) {
 		// If the die has not been selected yet, do not do this function yet
-		if (SelectedDieIndex < 0 || SelectedDieIndex >= currentDice.Length) {
-			return;
-		}
+		// if (SelectedDieIndex < 0 || SelectedDieIndex >= currentDice.Length) {
+		// 	return;
+		// }
 
 		// If the hand has not been selected yet, do not do this function yet
 		if (SelectedHandIndex != 0 && SelectedHandIndex != 1) {
 			return;
 		}
 
-		AddEventText($"{person.name} chooses ({currentDice[SelectedDieIndex].DieString}) as die and rolls with their {(SelectedHandIndex == 0 ? "left" : "right")} hand.");
-
-		// Roll the dice and get a dice value
-		int dieValue = ConsumeDieAt(SelectedDieIndex);
-
-		rollText.text = $"Roll: {dieValue}";
-		AddEventText($"{person.name} rolls a {dieValue}.");
-
-		// Get the finger at the dice roll value
-		Finger finger = person.GetFingerAt(SelectedHandIndex, dieValue);
-
-		// Determine what the player can do based on the dice roll
-		if (finger) {
-			AddEventText($"There is a finger at the die value, so {person.name} gets to use an item.");
-		} else {
-			AddEventText($"There is not a finger at the die value, so {person.name} gets to chop off a finger.");
-		}
-
-		// Place a new die
-		PlaceRandomDieAt(SelectedDieIndex);
+		GameState = GameState.ROLLING_DIE;
 	}
 
 	/// <summary>
@@ -247,7 +207,14 @@ public class GameManager : MonoBehaviour {
 		SelectedDieIndex = dieIndex;
 	}
 
-	private void AddEventText (string text) => eventText.text = "-> " + text + "\n" + eventText.text;
+	/// <summary>
+	///		Select a finger on a hand
+	/// </summary>
+	/// <param name="handIndex">The hand index of the finger that was selected</param>
+	/// <param name="fingerIndex">The finger index on that hand that was selected</param>
+	public void SelectFinger ( ) {
+
+	}
 }
 
 /*
