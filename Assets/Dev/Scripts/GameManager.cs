@@ -32,14 +32,26 @@ public class GameManager : MonoBehaviour {
 	[SerializeField] private TextMeshProUGUI rollText;
 
 	/// <summary>
-	///		The currently selected finger on the board
+	///		The current state of the game
 	/// </summary>
-	public Finger SelectedFinger { get => _selectedFinger; set => _selectedFinger = value; }
+	public GameState GameState {
+		get => _gameState;
+		set {
+			_gameState = value;
 
-	/// <summary>
-	///		The currently selected hand on the board
-	/// </summary>
-	public Hand SelectedHand { get => _selectedHand; set => _selectedHand = value; }
+			switch (_gameState) {
+				case GameState.CREATING_BOARD:
+					StartCoroutine(CreateBoardState( ));
+					break;
+				case GameState.CHOOSING_DIE:
+					break;
+				case GameState.ROLLING_DIE:
+					break;
+				case GameState.CHOPPING_FINGER:
+					break;
+			}
+		}
+	}
 
 	/// <summary>
 	///		Whether or not it is the players turn
@@ -84,136 +96,52 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	public GameState GameState {
-		get => _gameState;
-		set {
-			_gameState = value;
+	/// <summary>
+	///		The currently selected finger on the board
+	/// </summary>
+	public Finger SelectedFinger { get => _selectedFinger; set => _selectedFinger = value; }
 
-			switch (_gameState) {
-				case GameState.CREATING_BOARD:
-					break;
-				case GameState.CHOOSING_DIE:
-					break;
-				case GameState.ROLLING_DIE:
-					ConsumeDieAt(SelectedDieIndex);
+	/// <summary>
+	///		The currently selected hand on the board
+	/// </summary>
+	public Hand SelectedHand { get => _selectedHand; set => _selectedHand = value; }
 
-					break;
-				case GameState.CHOPPING_FINGER:
-
-
-					break;
-			}
-		}
+	private void OnValidate ( ) {
+		diceManager = FindObjectOfType<DiceManager>( );
+		itemManager = FindObjectOfType<ItemManager>( );
 	}
 
 	private void Awake ( ) {
+		OnValidate( );
 	}
 
 	private void Start ( ) {
-		// GameState = GameState.CREATING_BOARD;
+		GameState = GameState.CREATING_BOARD;
 		// ActivePerson = player;
 	}
 
-	private void Update ( ) {
-		switch (GameState) {
-			case GameState.CREATING_BOARD:
-				break;
-			case GameState.CHOOSING_DIE:
-				break;
-			case GameState.ROLLING_DIE:
-				break;
-			case GameState.CHOPPING_FINGER:
-				break;
-		}
+	private IEnumerator CreateBoardState ( ) {
+		// Create dice
+		diceManager.PlaceRandomDieAt(0);
+		diceManager.PlaceRandomDieAt(1);
+		diceManager.PlaceRandomDieAt(2);
+
+		// Create items
+		itemManager.PlaceRandomDieAt(0);
+		itemManager.PlaceRandomDieAt(1);
+		itemManager.PlaceRandomDieAt(2);
+		itemManager.PlaceRandomDieAt(3);
+		itemManager.PlaceRandomDieAt(4);
+
+		GameState = GameState.CHOOSING_DIE;
+
+		yield return null;
 	}
 
-	// NOTE: Some of these functions will probably need to be coroutines since some have animations that need to play with them
-	// NOTE: For example, when placing a die, the die will need to float in from the side or something, meaning the game loop needs to wait for it to finish
+	private IEnumerator ChoosingDieState ( ) {
 
-	/// <summary>
-	///		Consume a die at the specified index by rolling it
-	/// </summary>
-	/// <param name="index">The index of the die to roll</param>
-	/// <returns>An integer value that is the random value on the die when it was rolled</returns>
-	private void ConsumeDieAt (int index) {
-		// Roll the die at the selected index to get a random value
-		// int dieValue = currentDice[index].Roll( );
 
-		// rollText.text = $"Roll: {dieValue}";
-		// AddEventText($"{ActivePerson.name} rolls a {dieValue}.");
-
-		// Remove the die that was used
-		// currentDice[index] = null;
-
-		// Get the finger at the dice roll value
-		// Finger finger = ActivePerson.GetFingerAt(SelectedHandIndex, dieValue);
-
-		/*
-		// Determine what the player can do based on the dice roll
-		if (finger != null) {
-			AddEventText($"There is a finger at the die value, so {ActivePerson.name} gets to use an item.");
-		} else {
-			AddEventText($"There is not a finger at the die value, so {ActivePerson.name} gets to chop off a finger.");
-		}
-		*/
-
-		// NOTE: Right now, the only thing that the player will be able to do is chop off a finger
-		// AddEventText($"Cannot select items yet, so {ActivePerson.name} gets to chop off a finger.");
-		GameState = GameState.CHOPPING_FINGER;
-	}
-
-	/// <summary>
-	///		Consume an item by using it
-	/// </summary>
-	/// <param name="index">The index of the item to use</param>
-	private void ConsumeItemAt (int index) {
-		// Remove the item that was used
-		// currentItems[index] = null;
-
-		// There will be more code here to actually use the item
-	}
-
-	/// <summary>
-	///		Confirm the die and hand selection for the specified person
-	/// </summary>
-	/// <param name="person">The person making the turn</param>
-	public void ConfirmTurnSelection (Person person) {
-		// If the die has not been selected yet, do not do this function yet
-		// if (SelectedDieIndex < 0 || SelectedDieIndex >= currentDice.Length) {
-		// 	return;
-		// }
-
-		// If the hand has not been selected yet, do not do this function yet
-		if (SelectedHandIndex != 0 && SelectedHandIndex != 1) {
-			return;
-		}
-
-		GameState = GameState.ROLLING_DIE;
-	}
-
-	/// <summary>
-	///		Select a hand to roll the dice with
-	/// </summary>
-	/// <param name="handIndex">The hand index to select</param>
-	public void SelectHand (int handIndex) {
-		SelectedHandIndex = handIndex;
-	}
-
-	/// <summary>
-	///		Select a die to roll
-	/// </summary>
-	/// <param name="dieIndex">The die index to select</param>
-	public void SelectDie (int dieIndex) {
-		SelectedDieIndex = dieIndex;
-	}
-
-	/// <summary>
-	///		Select a finger on a hand
-	/// </summary>
-	/// <param name="handIndex">The hand index of the finger that was selected</param>
-	/// <param name="fingerIndex">The finger index on that hand that was selected</param>
-	public void SelectFinger ( ) {
-
+		yield return null;
 	}
 }
 

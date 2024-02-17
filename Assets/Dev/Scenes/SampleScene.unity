@@ -528,6 +528,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4063481892091068979, guid: 00f51f7c62895ff4aaabf3f5ba43e60e,
+        type: 3}
+      propertyPath: hand
+      value: 
+      objectReference: {fileID: 711230967}
+    - target: {fileID: 4958367064473224068, guid: 00f51f7c62895ff4aaabf3f5ba43e60e,
+        type: 3}
+      propertyPath: hand
+      value: 
+      objectReference: {fileID: 599121432}
     - target: {fileID: 7559597619822391732, guid: 00f51f7c62895ff4aaabf3f5ba43e60e,
         type: 3}
       propertyPath: m_Name
@@ -1805,7 +1815,7 @@ Transform:
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
   m_LocalRotation: {x: 0.42261827, y: 0, z: 0, w: 0.9063079}
-  m_LocalPosition: {x: 0, y: 17, z: -17.5}
+  m_LocalPosition: {x: 0, y: 17, z: -16}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1855,6 +1865,18 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
+--- !u!114 &333281588 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6251099757961588652, guid: 00f51f7c62895ff4aaabf3f5ba43e60e,
+    type: 3}
+  m_PrefabInstance: {fileID: 4205071822680864670}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 835813ec40928924ebb37340b158f542, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &335345335
 GameObject:
   m_ObjectHideFlags: 0
@@ -3341,6 +3363,18 @@ MonoBehaviour:
   diceRadius: 2
   diceOffsetRadians: 3.44
   currentDice: []
+--- !u!114 &599121432 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3056701489707413019, guid: 00f51f7c62895ff4aaabf3f5ba43e60e,
+    type: 3}
+  m_PrefabInstance: {fileID: 128566139}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 835813ec40928924ebb37340b158f542, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &607387410
 GameObject:
   m_ObjectHideFlags: 0
@@ -3743,6 +3777,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 709774776}
   m_CullTransparentMesh: 1
+--- !u!114 &711230967 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6251099757961588652, guid: 00f51f7c62895ff4aaabf3f5ba43e60e,
+    type: 3}
+  m_PrefabInstance: {fileID: 128566139}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 835813ec40928924ebb37340b158f542, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &728875007
 GameObject:
   m_ObjectHideFlags: 0
@@ -4786,6 +4832,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &831941470 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3056701489707413019, guid: 00f51f7c62895ff4aaabf3f5ba43e60e,
+    type: 3}
+  m_PrefabInstance: {fileID: 4205071822680864670}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 835813ec40928924ebb37340b158f542, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -9124,13 +9182,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1628367585}
   opponent: {fileID: 128566140}
-  currentDice: []
-  currentItems: []
+  diceManager: {fileID: 0}
+  itemManager: {fileID: 0}
   _gameState: 0
   _activePerson: {fileID: 0}
   _selectedHandIndex: 0
   _selectedDieIndex: 0
   _selectedFinger: {fileID: 0}
+  _selectedHand: {fileID: 0}
   dicePrefabs:
   - {fileID: 2737848490664105946, guid: 5d17f16405a3d55448cf2aaf384e7c97, type: 3}
   - {fileID: 7724718203437242704, guid: 648114caa62befc4db6794baa802f0d8, type: 3}
@@ -10607,6 +10666,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4063481892091068979, guid: 00f51f7c62895ff4aaabf3f5ba43e60e,
+        type: 3}
+      propertyPath: hand
+      value: 
+      objectReference: {fileID: 333281588}
+    - target: {fileID: 4958367064473224068, guid: 00f51f7c62895ff4aaabf3f5ba43e60e,
+        type: 3}
+      propertyPath: hand
+      value: 
+      objectReference: {fileID: 831941470}
     - target: {fileID: 7559597619822391732, guid: 00f51f7c62895ff4aaabf3f5ba43e60e,
         type: 3}
       propertyPath: m_Name
