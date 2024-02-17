@@ -28,6 +28,6 @@ public class Die : MonoBehaviour {
 	/// <summary>
 	///		Get a random value from this die
 	/// </summary>
-	/// <returns>A random face value</returns>
+	/// <returns>A random integer face value on the die</returns>
 	public int Roll ( ) => faceValues[Random.Range(0, faceValues.Count)];
 }

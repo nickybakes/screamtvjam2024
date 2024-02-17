@@ -12,14 +12,14 @@ public class GameManager : MonoBehaviour {
 	[Header("References")]
 	[SerializeField] private Person _player;
 	[SerializeField] private Person _opponent;
-	[Header("Properties")]
-	[SerializeField] private bool _isPlayerTurn;
-	[SerializeField] private HandType _selectedHandType;
-	[SerializeField] private int _selectedDieIndex;
 	[SerializeField] private Die[ ] currentDice;
 	[SerializeField] private Item[ ] currentItems;
+	[Header("Properties")]
 	[SerializeField] private GameState _gameState;
-	[Header("Test")]
+	[SerializeField] private bool _isPlayerTurn;
+	[SerializeField] private int _selectedHandIndex;
+	[SerializeField] private int _selectedDieIndex;
+	[Header("Test Fields")]
 	[SerializeField] private List<GameObject> dicePrefabs;
 	[SerializeField] private List<Transform> diceButtons;
 	[SerializeField] private List<GameObject> itemPrefabs;
@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour {
 		private set {
 			// If the turn in the game has changed, reset selected options
 			if (_isPlayerTurn != value) {
-				SelectedHandType = HandType.NONE;
+				SelectedHandIndex = -1;
 				SelectedDieIndex = -1;
 			}
 
@@ -72,13 +72,13 @@ public class GameManager : MonoBehaviour {
 	/// <summary>
 	///		The currently selected hand
 	/// </summary>
-	public HandType SelectedHandType {
-		get => _selectedHandType;
+	public int SelectedHandIndex {
+		get => _selectedHandIndex;
 		set {
-			_selectedHandType = value;
+			_selectedHandIndex = value;
 
-			leftHandButton.GetComponent<Image>( ).color = (_selectedHandType == HandType.LEFT ? Color.red : Color.white);
-			rightHandButton.GetComponent<Image>( ).color = (_selectedHandType == HandType.RIGHT ? Color.red : Color.white);
+			leftHandButton.GetComponent<Image>( ).color = (_selectedHandIndex == 0 ? Color.red : Color.white);
+			rightHandButton.GetComponent<Image>( ).color = (_selectedHandIndex == 1 ? Color.red : Color.white);
 		}
 	}
 
@@ -90,16 +90,16 @@ public class GameManager : MonoBehaviour {
 			switch (_gameState) {
 				case GameState.CREATING_BOARD:
 					// Generate starting dice
-					PlaceRandomDie(0);
-					PlaceRandomDie(1);
-					PlaceRandomDie(2);
+					PlaceRandomDieAt(0);
+					PlaceRandomDieAt(1);
+					PlaceRandomDieAt(2);
 
 					// Generate starting items
-					PlaceRandomItem(0);
-					PlaceRandomItem(1);
-					PlaceRandomItem(2);
-					PlaceRandomItem(3);
-					PlaceRandomItem(4);
+					PlaceRandomItemAt(0);
+					PlaceRandomItemAt(1);
+					PlaceRandomItemAt(2);
+					PlaceRandomItemAt(3);
+					PlaceRandomItemAt(4);
 
 					break;
 				case GameState.CHOOSING_DIE:
@@ -121,7 +121,6 @@ public class GameManager : MonoBehaviour {
 
 	private void Start ( ) {
 		GameState = GameState.CREATING_BOARD;
-
 		IsPlayerTurn = true;
 	}
 
@@ -140,48 +139,59 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	// Some of these functions will probably need to be coroutines since some have animations that need to play with them
+	// For example, when placing a die, the die will need to float in from the side or something, meaning the game loop needs to wait for it to finish
+
+	/// <summary>
+	///		Consume a die at the specified index by rolling it
+	/// </summary>
+	/// <param name="index">The index of the die to roll</param>
+	/// <returns>An integer value that is the random value on the die when it was rolled</returns>
+	private int ConsumeDieAt (int index) {
+		// Roll the die at the selected index to get a random value
+		int dieValue = currentDice[index].Roll( );
+
+		// Remove the die that was used
+		currentDice[index] = null;
+
+		return dieValue;
+	}
+
 	/// <summary>
 	///		Place a random die on the board at the specified index
 	/// </summary>
 	/// <returns>The die object that was placed on the board</returns>
-	private Die PlaceRandomDie (int index) {
+	private Die PlaceRandomDieAt (int index) {
 		Die randomDie = dicePrefabs[Random.Range(0, dicePrefabs.Count)].GetComponent<Die>( );
-		currentDice[index] = randomDie;
 
-		// Temporary UI code
+		currentDice[index] = randomDie;
 		diceButtons[index].GetComponentInChildren<TextMeshProUGUI>( ).text = "Select Die\n" + randomDie.DieString;
 
 		return randomDie;
 	}
 
 	/// <summary>
+	///		Consume an item by using it
+	/// </summary>
+	/// <param name="index">The index of the item to use</param>
+	private void ConsumeItemAt (int index) {
+		// Remove the item that was used
+		currentItems[index] = null;
+
+		// There will be more code here to actually use the item
+	}
+
+	/// <summary>
 	///		Place a random item on the board at the specified index
 	/// </summary>
 	/// <returns>The item object that was placed on the board</returns>
-	private Item PlaceRandomItem (int index) {
+	private Item PlaceRandomItemAt (int index) {
 		Item randomItem = itemPrefabs[Random.Range(0, itemPrefabs.Count)].GetComponent<Item>( );
-		currentItems[index] = randomItem;
 
-		// Temporary UI code
-		itemButtons[index].GetComponentInChildren<TextMeshProUGUI>( ).text = randomItem.Name;
+		currentItems[index] = randomItem;
+		itemButtons[index].GetComponentInChildren<TextMeshProUGUI>( ).text = randomItem.name;
 
 		return randomItem;
-	}
-
-	/// <summary>
-	///		TEMPORARY | Select a hand to roll the dice with.
-	/// </summary>
-	/// <param name="handType">The type of hand to select in integer form</param>
-	public void SelectHand (int handType) {
-		SelectedHandType = (HandType) handType;
-	}
-
-	/// <summary>
-	///		TEMPORARY | Select a die to roll
-	/// </summary>
-	/// <param name="dieIndex">The die index on the board</param>
-	public void SelectDie (int dieIndex) {
-		SelectedDieIndex = dieIndex;
 	}
 
 	/// <summary>
@@ -189,30 +199,52 @@ public class GameManager : MonoBehaviour {
 	/// </summary>
 	/// <param name="person">The person making the turn</param>
 	public void ConfirmTurnSelection (Person person) {
-		AddEventText($"{person.Name} chooses ({currentDice[SelectedDieIndex].DieString}) as die and rolls with their {(SelectedHandType == HandType.RIGHT ? "right" : "left")} hand.");
+		// If the die has not been selected yet, do not do this function yet
+		if (SelectedDieIndex < 0 || SelectedDieIndex >= currentDice.Length) {
+			return;
+		}
+
+		// If the hand has not been selected yet, do not do this function yet
+		if (SelectedHandIndex != 0 && SelectedHandIndex != 1) {
+			return;
+		}
+
+		AddEventText($"{person.name} chooses ({currentDice[SelectedDieIndex].DieString}) as die and rolls with their {(SelectedHandIndex == 0 ? "left" : "right")} hand.");
 
 		// Roll the dice and get a dice value
-		int dieValue = currentDice[SelectedDieIndex].Roll( );
+		int dieValue = ConsumeDieAt(SelectedDieIndex);
 
 		rollText.text = $"Roll: {dieValue}";
-
-		AddEventText($"{person.Name} rolls a {dieValue}.");
-
-		// Remove the dice that was used
-		currentDice[SelectedDieIndex] = null;
+		AddEventText($"{person.name} rolls a {dieValue}.");
 
 		// Get the finger at the dice roll value
-		Finger finger = person.GetFingerAt(SelectedHandType, dieValue);
+		Finger finger = person.GetFingerAt(SelectedHandIndex, dieValue);
 
 		// Determine what the player can do based on the dice roll
 		if (finger) {
-			AddEventText($"There is a finger at the die value, so {person.Name} gets to use an item.");
+			AddEventText($"There is a finger at the die value, so {person.name} gets to use an item.");
 		} else {
-			AddEventText($"There is not a finger at the die value, so {person.Name} gets to chop off a finger.");
+			AddEventText($"There is not a finger at the die value, so {person.name} gets to chop off a finger.");
 		}
 
 		// Place a new die
-		PlaceRandomDie(SelectedDieIndex);
+		PlaceRandomDieAt(SelectedDieIndex);
+	}
+
+	/// <summary>
+	///		Select a hand to roll the dice with
+	/// </summary>
+	/// <param name="handIndex">The hand index to select</param>
+	public void SelectHand (int handIndex) {
+		SelectedHandIndex = handIndex;
+	}
+
+	/// <summary>
+	///		Select a die to roll
+	/// </summary>
+	/// <param name="dieIndex">The die index to select</param>
+	public void SelectDie (int dieIndex) {
+		SelectedDieIndex = dieIndex;
 	}
 
 	private void AddEventText (string text) => eventText.text = "-> " + text + "\n" + eventText.text;

@@ -9,9 +9,6 @@ using static UnityEngine.Rendering.DebugUI;
 
 #region Custom Dictionaries
 
-[Serializable]
-public class FingerTypeDictionary : SerializableDictionary<FingerType, Finger> { }
-
 #endregion
 
 public abstract class SerializableDictionaryBase<TKey, TValue, TValueStorage> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver {

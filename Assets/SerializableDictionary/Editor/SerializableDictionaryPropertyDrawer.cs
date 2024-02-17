@@ -7,9 +7,6 @@ using System;
 
 #region Custom Dictionaries
 
-[CustomPropertyDrawer(typeof(FingerTypeDictionary))]
-public class AnySerializableDictionaryPropertyDrawer : SerializableDictionaryPropertyDrawer { }
-
 #endregion
 
 public class SerializableDictionaryPropertyDrawer : PropertyDrawer {
