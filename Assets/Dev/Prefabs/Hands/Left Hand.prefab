@@ -12,7 +12,7 @@ PrefabInstance:
         type: 3}
       propertyPath: _hand
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1417381530068600739}
     - target: {fileID: 547896849471649544, guid: 4a42282126e56644288f644dff69812f,
         type: 3}
       propertyPath: _index
@@ -92,7 +92,7 @@ PrefabInstance:
         type: 3}
       propertyPath: _hand
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1417381530068600739}
     - target: {fileID: 4300791126851280908, guid: 4a42282126e56644288f644dff69812f,
         type: 3}
       propertyPath: _index
@@ -107,7 +107,7 @@ PrefabInstance:
         type: 3}
       propertyPath: _hand
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1417381530068600739}
     - target: {fileID: 5139294074300144855, guid: 4a42282126e56644288f644dff69812f,
         type: 3}
       propertyPath: _index
@@ -187,7 +187,7 @@ PrefabInstance:
         type: 3}
       propertyPath: _hand
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1417381530068600739}
     - target: {fileID: 8255260236104636790, guid: 4a42282126e56644288f644dff69812f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -197,7 +197,7 @@ PrefabInstance:
         type: 3}
       propertyPath: _hand
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1417381530068600739}
     - target: {fileID: 8457930050924422245, guid: 4a42282126e56644288f644dff69812f,
         type: 3}
       propertyPath: _index
@@ -218,6 +218,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cf53de456335cd147a80b7f8bda3fafc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1417381530068600739 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6516233543435052614, guid: 4a42282126e56644288f644dff69812f,
+    type: 3}
+  m_PrefabInstance: {fileID: 5315869477103870437}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 835813ec40928924ebb37340b158f542, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1509098949372079477 stripped

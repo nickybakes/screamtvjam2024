@@ -7,29 +7,26 @@ public enum GameState {
 	CREATING_BOARD, CHOOSING_DIE, CHOOSING_ITEM, ROLLING_DIE, CUTTING_FINGER
 }
 
-public class GameManager : MonoBehaviour {
+public class GameManager : Singleton<GameManager> {
 	[Header("References")]
 	[SerializeField] private Person player;
 	[SerializeField] private Person opponent;
-	[SerializeField] private DiceManager diceManager;
-	[SerializeField] private ItemManager itemManager;
 	[Space]
 	[SerializeField] private Button confirmChoiceButton;
 	[Header("Properties")]
 	[SerializeField] private GameState _gameState;
-	[SerializeField] private Person _activePerson;
-	[SerializeField] private Die _selectedDie;
-	[SerializeField] private Item _selectedItem;
-	[SerializeField] private Finger _selectedFinger;
-	[SerializeField] private Hand _selectedHand;
+	[SerializeField] private Person activePerson;
+	[SerializeField] private List<Die> selectedDice;
+	[SerializeField] private List<Item> selectedItems;
+	[SerializeField] private List<Finger> selectedFingers;
+	[SerializeField] private List<Hand> selectedHands;
 	[Header("Flags")]
-	[SerializeField] private bool _canSelectDie;
-	[SerializeField] private bool _canSelectItem;
-	[SerializeField] private bool _canSelectFinger;
-	[SerializeField] private bool _canSelectHand;
+	[SerializeField] private bool _canSelectDice;
+	[SerializeField] private bool _canSelectItems;
+	[SerializeField] private bool _canSelectFingers;
+	[SerializeField] private bool _canSelectHands;
 	[SerializeField] private bool canSelectAnyFinger;
 	[SerializeField] private bool canSelectAnyHand;
-	[Space]
 	[SerializeField] private bool confirmChoice;
 
 	/// <summary>
@@ -42,153 +39,46 @@ public class GameManager : MonoBehaviour {
 
 			switch (_gameState) {
 				case GameState.CREATING_BOARD:
-					StartCoroutine(CreateBoardState( ));
 					break;
 				case GameState.CHOOSING_DIE:
-					StartCoroutine(ChoosingDieState( ));
 					break;
 				case GameState.ROLLING_DIE:
-					StartCoroutine(RollingDieState( ));
 					break;
 				case GameState.CUTTING_FINGER:
-					StartCoroutine(CuttingFingerState( ));
 					break;
 				case GameState.CHOOSING_ITEM:
-					StartCoroutine(ChoosingItemState( ));
-					break;
-				default:
-					Debug.LogWarning("There is no coroutine for the currently selected game state!");
 					break;
 			}
 		}
 	}
 
 	/// <summary>
-	///		The currently active person, or the person whose turn it is
+	///		Whether or not dice can be selected
 	/// </summary>
-	public Person ActivePerson { get => _activePerson; private set => _activePerson = value; }
+	public bool CanSelectDice { get => _canSelectDice; private set => _canSelectDice = value; }
 
 	/// <summary>
-	///		The currently selected die
+	///		Whether or not items can be selected
 	/// </summary>
-	public Die SelectedDie {
-		get => _selectedDie;
-		set {
-			// Always allow this value to be set to null
-			if (value == null) {
-				_selectedDie = value;
-				return;
-			}
-
-			// If a die cannot currently be selected, return
-			if (!CanSelectDie) {
-				return;
-			}
-
-			_selectedDie = value;
-		}
-	}
+	public bool CanSelectItems { get => _canSelectItems; private set => _canSelectItems = value; }
 
 	/// <summary>
-	///		The currently selected item
+	///		Whether or not fingers can be selected
 	/// </summary>
-	public Item SelectedItem {
-		get => _selectedItem;
-		set {
-			// Always allow this value to be set to null
-			if (value == null) {
-				_selectedItem = value;
-				return;
-			}
-
-			// If an item cannot currently be selected, return
-			if (!CanSelectItem) {
-				return;
-			}
-
-			_selectedItem = value;
-		}
-	}
+	public bool CanSelectFingers { get => _canSelectFingers; private set => _canSelectFingers = value; }
 
 	/// <summary>
-	///		The currently selected finger
+	///		Whether or not hands can be selected
 	/// </summary>
-	public Finger SelectedFinger {
-		get => _selectedFinger;
-		set {
-			// Always allow this value to be set to null
-			if (value == null) {
-				_selectedFinger = value;
-				return;
-			}
+	public bool CanSelectHands { get => _canSelectHands; private set => _canSelectHands = value; }
 
-			// If a finger cannot currently be selected, return
-			if (!CanSelectFinger) {
-				return;
-			}
+	protected override void Awake ( ) {
+		base.Awake( );
 
-			// If the player cannot select any finger and the finger is not part of the active person, return
-			if (!canSelectAnyFinger && value.Person != ActivePerson) {
-				return;
-			}
-
-			_selectedFinger = value;
-		}
-	}
-
-	/// <summary>
-	///		The currently selected hand
-	/// </summary>
-	public Hand SelectedHand {
-		get => _selectedHand;
-		set {
-			// Always allow this value to be set to null
-			if (value == null) {
-				_selectedHand = value;
-				return;
-			}
-
-			// If a hand cannot currently be selected, return
-			if (!CanSelectHand) {
-				return;
-			}
-
-			// If the player cannot select any hand and the hand is not part of the active person, return
-			if (!canSelectAnyHand && value.Person != ActivePerson) {
-				return;
-			}
-
-			_selectedHand = value;
-		}
-	}
-
-	/// <summary>
-	///		Whether or not a die can be selected
-	/// </summary>
-	public bool CanSelectDie { get => _canSelectDie; set => _canSelectDie = value; }
-
-	/// <summary>
-	///		Whether or not an item can be selected
-	/// </summary>
-	public bool CanSelectItem { get => _canSelectItem; set => _canSelectItem = value; }
-
-	/// <summary>
-	///		Whether or not a hand can be selected
-	/// </summary>
-	public bool CanSelectHand { get => _canSelectHand; set => _canSelectHand = value; }
-
-	/// <summary>
-	///		Whether or not a finger can be selected
-	/// </summary>
-	public bool CanSelectFinger { get => _canSelectFinger; set => _canSelectFinger = value; }
-
-	private void OnValidate ( ) {
-		diceManager = FindObjectOfType<DiceManager>( );
-		itemManager = FindObjectOfType<ItemManager>( );
-	}
-
-	private void Awake ( ) {
-		OnValidate( );
+		selectedDice = new List<Die>(1);
+		selectedItems = new List<Item>(1);
+		selectedFingers = new List<Finger>(1);
+		selectedHands = new List<Hand>(1);
 
 		// Set on click events for buttons
 		confirmChoiceButton.onClick.AddListener(( ) => confirmChoice = true);
@@ -202,12 +92,211 @@ public class GameManager : MonoBehaviour {
 		switch (GameState) {
 			case GameState.CHOOSING_DIE:
 				// Only make the player's choice confirmable if they have selected a hand and a die
-				confirmChoiceButton.interactable = SelectedDie != null && SelectedHand != null;
+				// confirmChoiceButton.interactable = SelectedDie != null && SelectedHand != null;
 
 				break;
 		}
 	}
 
+	/// <summary>
+	///		Select a die
+	/// </summary>
+	/// <param name="die">The die to select</param>
+	public void SelectDie (Die die) {
+		// If a die cannot be selected right now, return
+		if (!CanSelectDice) {
+			return;
+		}
+
+		if (selectedDice.Contains(die)) {
+			// If the inputted die was already selected, unselect it
+			selectedDice.Remove(die);
+		} else if (die == null) {
+			// If the number of selected dice has reached it capacity, remove the first one so a new one can be added
+			if (selectedDice.Capacity == selectedDice.Count) {
+				selectedDice.RemoveAt(0);
+			}
+
+			// If the die is not null, then add it to be selected
+			selectedDice.Add(die);
+		}
+	}
+
+	/// <summary>
+	///		Select an item
+	/// </summary>
+	/// <param name="item">The item to select</param>
+	public void SelectItem (Item item) {
+		// If an item cannot be selected right now, return
+		if (!CanSelectItems) {
+			return;
+		}
+
+		if (selectedItems.Contains(item)) {
+			// If the inputted item was already selected, unselect it
+			selectedItems.Remove(item);
+		} else if (item == null) {
+			// If the number of selected items has reached it capacity, remove the first one so a new one can be added
+			if (selectedItems.Capacity == selectedItems.Count) {
+				selectedItems.RemoveAt(0);
+			}
+
+			// If the item is not null, then add it to be selected
+			selectedItems.Add(item);
+		}
+	}
+
+	/// <summary>
+	///		Select a finger
+	/// </summary>
+	/// <param name="finger">The finger to select</param>
+	public void SelectFinger (Finger finger) {
+		// If a finger cannot be selected right now, return
+		if (!CanSelectFingers) {
+			return;
+		}
+
+		// If the active person cannot select any finger and the finger to be selected is not part of the active person, return
+		if (!canSelectAnyFinger && finger.Person != activePerson) {
+			return;
+		}
+
+		if (selectedFingers.Contains(finger)) {
+			// If the inputted finger was already selected, unselect it
+			selectedFingers.Remove(finger);
+		} else if (finger == null) {
+			// If the number of selected fingers has reached it capacity, remove the first one so a new one can be added
+			if (selectedFingers.Capacity == selectedFingers.Count) {
+				selectedFingers.RemoveAt(0);
+			}
+
+			// If the finger is not null, then add it to be selected
+			selectedFingers.Add(finger);
+		}
+	}
+
+	/// <summary>
+	///		Select a hand
+	/// </summary>
+	/// <param name="hand">The hand to select</param>
+	public void SelectHand (Hand hand) {
+		// If a hand cannot be selected right now, return
+		if (!CanSelectHands) {
+			return;
+		}
+
+		// If the active person cannot select any hand and the hand to be selected is not part of the active person, return
+		if (!canSelectAnyHand && hand.Person != activePerson) {
+			return;
+		}
+
+		if (selectedHands.Contains(hand)) {
+			// If the inputted hand was already selected, unselect it
+			selectedHands.Remove(hand);
+		} else if (hand == null) {
+			// If the number of selected hands has reached it capacity, remove the first one so a new one can be added
+			if (selectedHands.Capacity == selectedHands.Count) {
+				selectedHands.RemoveAt(0);
+			}
+
+			// If the hand is not null, then add it to be selected
+			selectedHands.Add(hand);
+		}
+	}
+
+	/// <summary>
+	///		Enable die selection flags
+	/// </summary>
+	/// <param name="diceCapacity">Set a new capacity of dice that can be selected at one time</param>
+	private void EnableDieSelection (int diceCapacity = 1) {
+		CanSelectDice = true;
+
+		// Make sure the size of the selected dice list is within the inputted capacity
+		while (diceCapacity < selectedDice.Count) {
+			selectedDice.RemoveAt(0);
+		}
+
+		selectedDice.Capacity = diceCapacity;
+	}
+
+	/// <summary>
+	///		Disable die selection flags
+	/// </summary>
+	private void DisableDieSelection ( ) {
+		CanSelectDice = false;
+	}
+
+	/// <summary>
+	///		Enable item selection flags
+	/// </summary>
+	/// <param name="itemCapacity">Set a new capacity of items that can be selected at one time</param>
+	private void EnableItemSelection (int itemCapacity = 1) {
+		CanSelectItems = true;
+
+		// Make sure the size of the selected items list is within the inputted capacity
+		while (itemCapacity < selectedItems.Count) {
+			selectedItems.RemoveAt(0);
+		}
+
+		selectedItems.Capacity = itemCapacity;
+	}
+
+	/// <summary>
+	///		Disable item selection flags
+	/// </summary>
+	private void DisableItemSelection ( ) {
+		CanSelectItems = false;
+	}
+
+	/// <summary>
+	///		Enable finger selection flags
+	/// </summary>
+	/// <param name="anyFinger">Whether or not any finger, regardless of active person, can be selected</param>
+	/// <param name="fingerCapacity">Set a new capacity of fingers that can be selected at one time</param>
+	private void EnableFingerSelection (bool anyFinger = false, int fingerCapacity = 1) {
+		CanSelectFingers = true;
+		canSelectAnyFinger = anyFinger;
+
+		// Make sure the size of the selected fingers list is within the inputted capacity
+		while (fingerCapacity < selectedFingers.Count) {
+			selectedFingers.RemoveAt(0);
+		}
+
+		selectedFingers.Capacity = fingerCapacity;
+	}
+
+	/// <summary>
+	///		Disable finger selection flags
+	/// </summary>
+	private void DisableFingerSelection ( ) {
+		CanSelectFingers = false;
+	}
+
+	/// <summary>
+	///		Enable hand selection flags
+	/// </summary>
+	/// <param name="anyHand">Whether or not any hand, regardless of active person, can be selected</param>
+	/// <param name="handCapacity">Set a new capacity of hands that can be selected at one time</param>
+	private void SetSelectableHandCount (bool anyHand = false, int handCapacity = 1) {
+		CanSelectHands = true;
+		canSelectAnyHand = anyHand;
+
+		// Make sure the size of the selected hands list is within the inputted capacity
+		while (handCapacity < selectedHands.Count) {
+			selectedHands.RemoveAt(0);
+		}
+
+		selectedHands.Capacity = handCapacity;
+	}
+
+	/// <summary>
+	///		Disable hand selection flags
+	/// </summary>
+	private void DisableHandSelection ( ) {
+		CanSelectHands = false;
+	}
+
+	/*
 	private IEnumerator CreateBoardState ( ) {
 		// Create dice
 		diceManager.PlaceRandomDieAt(0);
@@ -308,6 +397,7 @@ public class GameManager : MonoBehaviour {
 
 		yield return null;
 	}
+	*/
 }
 
 /*

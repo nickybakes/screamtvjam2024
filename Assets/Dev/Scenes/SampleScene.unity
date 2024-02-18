@@ -925,7 +925,7 @@ MonoBehaviour:
   - {fileID: 511914425257045206, guid: 7fc12d69e7cf2c745a452e48b999ef30, type: 3}
   diceCount: 3
   diceLineLength: 5
-  _activeDice: []
+  activeDice: []
 --- !u!114 &599121432 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3056701489707413019, guid: 00f51f7c62895ff4aaabf3f5ba43e60e,
@@ -987,7 +987,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &663990136
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1573,19 +1573,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1628367585}
   opponent: {fileID: 128566140}
-  diceManager: {fileID: 569169164}
-  itemManager: {fileID: 861964529}
   confirmChoiceButton: {fileID: 1621770625}
   _gameState: 0
-  _activePerson: {fileID: 0}
-  _selectedDie: {fileID: 0}
-  _selectedItem: {fileID: 0}
-  _selectedFinger: {fileID: 0}
-  _selectedHand: {fileID: 0}
-  _canSelectDie: 0
-  _canSelectItem: 0
-  _canSelectFinger: 0
-  _canSelectHand: 0
+  activePerson: {fileID: 0}
+  selectedDice: []
+  selectedItems: []
+  selectedFingers: []
+  selectedHands: []
+  _canSelectDice: 0
+  _canSelectItems: 0
+  _canSelectFingers: 0
+  _canSelectHands: 0
   canSelectAnyFinger: 0
   canSelectAnyHand: 0
   confirmChoice: 0

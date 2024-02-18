@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3817006343260374343}
   - component: {fileID: 1520725283273379548}
   - component: {fileID: 1109175722627733104}
-  - component: {fileID: 1777360414004623932}
+  - component: {fileID: 1021339420492223652}
   - component: {fileID: 2388138974727310418}
   m_Layer: 0
   m_Name: Die
@@ -85,8 +85,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &1777360414004623932
-MeshCollider:
+--- !u!65 &1021339420492223652
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -103,10 +103,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &2388138974727310418
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -119,4 +118,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 742192f7b908e9b4fb9222ca829709b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mouseClickCollider: {fileID: 1021339420492223652}
   faceValues: 000000000000000000000000000000000000000000000000

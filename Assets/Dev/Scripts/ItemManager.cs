@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class ItemManager : MonoBehaviour {
 	[Header("References")]
@@ -39,16 +41,19 @@ public class ItemManager : MonoBehaviour {
 		currentItems = new Item[itemCount];
 	}
 
-	public void PlaceRandomItemAt (int index) {
+	/// <summary>
+	///		Place a random item at a specific index
+	/// </summary>
+	/// <param name="itemIndex">The index to place a new item at</param>
+	public void PlaceRandomItemAt (int itemIndex) {
 		// Get a random item prefab
 		GameObject randomItemPrefab = itemPrefabs[Random.Range(0, itemPrefabs.Count)];
-		Transform itemPosition = transform.GetChild(index);
+		Transform itemPosition = transform.GetChild(itemIndex);
 
 		// Spawn the item prefab in the scene at the corresponding item position
 		Item randomItem = Instantiate(randomItemPrefab, itemPosition).GetComponent<Item>( );
 
-		currentItems[index] = randomItem;
-		randomItem.Index = index;
+		currentItems[itemIndex] = randomItem;
 		Debug.Log($"Generating random item: {randomItem.Name}");
 	}
 }

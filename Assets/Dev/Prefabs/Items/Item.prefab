@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8198446265344732993}
   - component: {fileID: 4395651156888863128}
   - component: {fileID: 8794141315323752383}
-  - component: {fileID: 8805765041588929301}
+  - component: {fileID: 4304331542903373706}
   - component: {fileID: 1488570325218146234}
   m_Layer: 0
   m_Name: Item
@@ -85,8 +85,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &8805765041588929301
-MeshCollider:
+--- !u!65 &4304331542903373706
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -103,10 +103,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1488570325218146234
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -119,3 +118,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 898739f84710f6e438e5100feba1e93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mouseClickCollider: {fileID: 4304331542903373706}
+  _name: Default Item Name

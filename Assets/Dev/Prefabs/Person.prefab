@@ -71,7 +71,7 @@ PrefabInstance:
         type: 3}
       propertyPath: _person
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 8038727572261305142}
     - target: {fileID: 1509098949372079477, guid: b31622770bfb75140a04b3aa964c1ce7,
         type: 3}
       propertyPath: _hand
@@ -227,7 +227,7 @@ PrefabInstance:
         type: 3}
       propertyPath: _person
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 8038727572261305142}
     - target: {fileID: 3635838418462590073, guid: 8f7cf4e1d17a99c4490a48dfa10dc95c,
         type: 3}
       propertyPath: _hand

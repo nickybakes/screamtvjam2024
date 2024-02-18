@@ -27,4 +27,18 @@ public class Person : MonoBehaviour {
 
 		return hands[handIndex].GetFingerAt(fingerIndex);
 	}
+
+	/// <summary>
+	///		Cut a finger on a specific hand and at a specific index
+	/// </summary>
+	/// <param name="handIndex">The hand index of the hand that the finger is on</param>
+	/// <param name="fingerIndex">The finger index to cut</param>
+	public void CutFingerAt (int handIndex, int fingerIndex) {
+		// Make sure the hand index is within range
+		if (handIndex < 0 || handIndex > hands.Length) {
+			return;
+		}
+
+		hands[handIndex].CutFingerAt(fingerIndex);
+	}
 }

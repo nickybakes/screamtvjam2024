@@ -5,33 +5,25 @@ using UnityEngine;
 
 public class Die : MonoBehaviour {
 	[Header("References")]
-	[SerializeField] private GameManager gameManager;
-	[SerializeField] private List<int> faceValues;
+	[SerializeField] private BoxCollider mouseClickCollider;
 	[Header("Properties")]
-	[SerializeField] private int _index;
+	[SerializeField] private List<int> faceValues;
 
-	/// <summary>
-	///		The index of this die in the dice manager list
-	/// </summary>
-	public int Index { get => _index; set => _index = value; }
-
-	private void OnValidate ( ) {
-		gameManager = FindObjectOfType<GameManager>( );
-	}
-
-	private void Awake ( ) {
-		OnValidate( );
+	private void Update ( ) {
+		mouseClickCollider.enabled = GameManager.Instance.CanSelectDice;
 	}
 
 	private void OnMouseDown ( ) {
-		gameManager.SelectedDie = this;
+		GameManager.Instance.SelectDie(this);
 	}
 
 	/// <summary>
 	///		Get a random value from this die
 	/// </summary>
 	/// <returns>A random integer face value on the die</returns>
-	public int Roll ( ) => faceValues[Random.Range(0, faceValues.Count)];
+	public int Roll ( ) {
+		return faceValues[Random.Range(0, faceValues.Count)];
+	}
 
 	public override string ToString ( ) {
 		string dieString = "";

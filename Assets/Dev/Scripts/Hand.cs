@@ -5,11 +5,13 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.Rendering.UI;
+using UnityEngine.XR;
 
 public class Hand : MonoBehaviour {
 	[Header("References")]
 	[SerializeField] private Finger[ ] fingers;
 	[SerializeField] private Person _person;
+	[SerializeField] private BoxCollider mouseClickCollider;
 
 	/// <summary>
 	///		The person that this hand belongs to
@@ -21,17 +23,12 @@ public class Hand : MonoBehaviour {
 	/// </summary>
 	public int FingerCount => fingers.Count(finger => finger != null);
 
-	private void OnValidate ( ) {
-		Person = GetComponentInParent<Person>( );
-
-		// Set finger indices
-		for (int i = 0; i < fingers.Length; i++) {
-			fingers[i].Index = i;
-		}
+	private void Update ( ) {
+		mouseClickCollider.enabled = GameManager.Instance.CanSelectHands;
 	}
 
-	private void Awake ( ) {
-		OnValidate( );
+	private void OnMouseDown ( ) {
+		GameManager.Instance.SelectHand(this);
 	}
 
 	/// <summary>
@@ -49,10 +46,23 @@ public class Hand : MonoBehaviour {
 	}
 
 	/// <summary>
+	///		Cut off a finger from this hand without knowing a specific index
+	/// </summary>
+	/// <param name="finger">The finger to cut</param>
+	public void CutFinger (Finger finger) {
+		CutFingerAt(Array.IndexOf(fingers, finger));
+	}
+
+	/// <summary>
 	///		Cut off a finger from this hand
 	/// </summary>
 	/// <param name="fingerIndex">The index of the finger to cut</param>
 	public void CutFingerAt (int fingerIndex) {
+		// Make sure the finger index is within range
+		if (fingerIndex < 0 || fingerIndex >= fingers.Length) {
+			return;
+		}
+
 		Finger finger = fingers[fingerIndex];
 		fingers[fingerIndex] = null;
 

@@ -4,21 +4,22 @@ using UnityEngine;
 
 public class Finger : MonoBehaviour {
 	[Header("References")]
-	[SerializeField] private GameManager gameManager;
 	[SerializeField] private Hand _hand;
+	[SerializeField] private BoxCollider mouseClickCollider;
 	[Header("Properties")]
 	[SerializeField] private int _health;
-	[SerializeField] private int _index;
 
 	/// <summary>
 	///		The current health of this finger
 	/// </summary>
-	public int Health { get => _health; set => _health = value; }
+	public int Health {
+		get => _health;
+		set {
+			_health = value;
 
-	/// <summary>
-	///		The index of this die in the dice manager list
-	/// </summary>
-	public int Index { get => _index; set => _index = value; }
+			/// TODO: Set model type based on health value
+		}
+	}
 
 	/// <summary>
 	///		The hand that this finger belongs to
@@ -30,23 +31,18 @@ public class Finger : MonoBehaviour {
 	/// </summary>
 	public Person Person => Hand.Person;
 
-	private void OnValidate ( ) {
-		gameManager = FindObjectOfType<GameManager>( );
-		Hand = GetComponentInParent<Hand>( );
-	}
-
-	private void Awake ( ) {
-		OnValidate( );
+	private void Update ( ) {
+		mouseClickCollider.enabled = GameManager.Instance.CanSelectFingers;
 	}
 
 	private void OnMouseDown ( ) {
-		gameManager.SelectedFinger = this;
+		GameManager.Instance.SelectFinger(this);
 	}
 
 	/// <summary>
 	///		Cut this finger off of its hand
 	/// </summary>
 	public void Cut ( ) {
-		Hand.CutFingerAt(Index);
+		Hand.CutFinger(this);
 	}
 }
