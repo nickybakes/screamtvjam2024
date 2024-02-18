@@ -50,13 +50,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 835813ec40928924ebb37340b158f542, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fingers:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  _palm: {fileID: 3803978996784876505}
+  fingers: []
+  _person: {fileID: 0}
 --- !u!1 &8474100388434308396
 GameObject:
   m_ObjectHideFlags: 0
@@ -176,7 +171,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55c017e5370aaa740b48e9d08c651af3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hand: {fileID: 6516233543435052614}
+  gameManager: {fileID: 0}
+  hand: {fileID: 0}
 --- !u!1001 &273447591611101304
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -209,6 +205,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8551176478536619037, guid: 03288b670132fa84999d4f230a2d1b14,
+        type: 3}
+      propertyPath: _hand
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8551176478536619037, guid: 03288b670132fa84999d4f230a2d1b14,
         type: 3}
@@ -261,6 +262,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8551176478536619037, guid: 03288b670132fa84999d4f230a2d1b14,
         type: 3}
+      propertyPath: _hand
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8551176478536619037, guid: 03288b670132fa84999d4f230a2d1b14,
+        type: 3}
+      propertyPath: _index
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8551176478536619037, guid: 03288b670132fa84999d4f230a2d1b14,
+        type: 3}
       propertyPath: _fingerType
       value: 2
       objectReference: {fileID: 0}
@@ -307,6 +318,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8551176478536619037, guid: 03288b670132fa84999d4f230a2d1b14,
+        type: 3}
+      propertyPath: _hand
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8551176478536619037, guid: 03288b670132fa84999d4f230a2d1b14,
+        type: 3}
+      propertyPath: _index
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8551176478536619037, guid: 03288b670132fa84999d4f230a2d1b14,
         type: 3}
@@ -357,6 +378,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8551176478536619037, guid: 03288b670132fa84999d4f230a2d1b14,
+        type: 3}
+      propertyPath: _hand
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8551176478536619037, guid: 03288b670132fa84999d4f230a2d1b14,
+        type: 3}
+      propertyPath: _index
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -400,6 +431,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8551176478536619037, guid: 03288b670132fa84999d4f230a2d1b14,
+        type: 3}
+      propertyPath: _hand
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8551176478536619037, guid: 03288b670132fa84999d4f230a2d1b14,
+        type: 3}
+      propertyPath: _index
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8551176478536619037, guid: 03288b670132fa84999d4f230a2d1b14,
         type: 3}

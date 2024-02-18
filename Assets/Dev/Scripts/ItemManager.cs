@@ -39,12 +39,16 @@ public class ItemManager : MonoBehaviour {
 		currentItems = new Item[itemCount];
 	}
 
-	public void PlaceRandomDieAt (int index) {
+	public void PlaceRandomItemAt (int index) {
+		// Get a random item prefab
 		GameObject randomItemPrefab = itemPrefabs[Random.Range(0, itemPrefabs.Count)];
 		Transform itemPosition = transform.GetChild(index);
+
+		// Spawn the item prefab in the scene at the corresponding item position
 		Item randomItem = Instantiate(randomItemPrefab, itemPosition).GetComponent<Item>( );
 
-		Debug.Log($"Generating random item: {randomItem.Name}");
 		currentItems[index] = randomItem;
+		randomItem.Index = index;
+		Debug.Log($"Generating random item: {randomItem.Name}");
 	}
 }

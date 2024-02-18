@@ -7,11 +7,17 @@ public class Item : MonoBehaviour {
 	[SerializeField] private GameManager gameManager;
 	[Header("Properties")]
 	[SerializeField] private string _name;
+	[SerializeField] private int _index;
 
 	/// <summary>
 	///		The name of the item
 	/// </summary>
 	public string Name => _name;
+
+	/// <summary>
+	///		The index of this die in the dice manager list
+	/// </summary>
+	public int Index { get => _index; set => _index = value; }
 
 	private void OnValidate ( ) {
 		gameManager = FindObjectOfType<GameManager>( );
@@ -22,11 +28,6 @@ public class Item : MonoBehaviour {
 	}
 
 	private void OnMouseDown ( ) {
-		// If an item cannot currently be selected, then return from this function
-		if (!gameManager.CanSelectItem) {
-			return;
-		}
-
 		gameManager.SelectedItem = this;
 	}
 }

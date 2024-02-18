@@ -43,12 +43,15 @@ public class DiceManager : MonoBehaviour {
 	}
 
 	public void PlaceRandomDieAt (int index) {
+		// Get a random die prefab
 		GameObject randomDiePrefab = dicePrefabs[Random.Range(0, dicePrefabs.Count)];
 		Transform diePosition = transform.GetChild(index);
+
+		// Spawn the die prefab in the scene at the corresponding die position
 		Die randomDie = Instantiate(randomDiePrefab, diePosition).GetComponent<Die>( );
 
-		Debug.Log($"Generating random die: {randomDie}");
 		ActiveDice[index] = randomDie;
 		randomDie.Index = index;
+		Debug.Log($"Generating random die: {randomDie}");
 	}
 }

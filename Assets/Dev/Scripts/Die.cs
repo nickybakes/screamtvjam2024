@@ -24,11 +24,6 @@ public class Die : MonoBehaviour {
 	}
 
 	private void OnMouseDown ( ) {
-		// If a die cannot currently be selected, then return from this function
-		if (!gameManager.CanSelectDie) {
-			return;
-		}
-
 		gameManager.SelectedDie = this;
 	}
 
