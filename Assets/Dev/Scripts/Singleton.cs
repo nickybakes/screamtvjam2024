@@ -28,7 +28,7 @@ public abstract class Singleton<T> : MonoBehaviour where T : Singleton<T> {
 		}
 
 		// Have the singleton persist between scenes
-		DontDestroyOnLoad(gameObject);
+		// DontDestroyOnLoad(gameObject);
 	}
 	#endregion
 }

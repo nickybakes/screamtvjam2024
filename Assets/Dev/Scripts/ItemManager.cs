@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class ItemManager : MonoBehaviour {
+public class ItemManager : Singleton<ItemManager> {
 	[Header("References")]
 	[SerializeField] private List<GameObject> itemPrefabs;
 	[Header("Properties")]

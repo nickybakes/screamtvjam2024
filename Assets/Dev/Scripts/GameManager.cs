@@ -86,6 +86,23 @@ public class GameManager : Singleton<GameManager> {
 
 	private void Start ( ) {
 		GameState = GameState.CREATING_BOARD;
+
+		// Create dice
+		DiceManager.Instance.PlaceRandomDieAt(0);
+		DiceManager.Instance.PlaceRandomDieAt(1);
+		DiceManager.Instance.PlaceRandomDieAt(2);
+
+		// Create items
+		ItemManager.Instance.PlaceRandomItemAt(0);
+		ItemManager.Instance.PlaceRandomItemAt(1);
+		ItemManager.Instance.PlaceRandomItemAt(2);
+		ItemManager.Instance.PlaceRandomItemAt(3);
+		ItemManager.Instance.PlaceRandomItemAt(4);
+
+		activePerson = player;
+
+		EnableDieSelection( );
+		EnableItemSelection(itemCapacity: 2);
 	}
 
 	private void Update ( ) {
@@ -111,7 +128,7 @@ public class GameManager : Singleton<GameManager> {
 		if (selectedDice.Contains(die)) {
 			// If the inputted die was already selected, unselect it
 			selectedDice.Remove(die);
-		} else if (die == null) {
+		} else if (die != null) {
 			// If the number of selected dice has reached it capacity, remove the first one so a new one can be added
 			if (selectedDice.Capacity == selectedDice.Count) {
 				selectedDice.RemoveAt(0);
@@ -135,7 +152,7 @@ public class GameManager : Singleton<GameManager> {
 		if (selectedItems.Contains(item)) {
 			// If the inputted item was already selected, unselect it
 			selectedItems.Remove(item);
-		} else if (item == null) {
+		} else if (item != null) {
 			// If the number of selected items has reached it capacity, remove the first one so a new one can be added
 			if (selectedItems.Capacity == selectedItems.Count) {
 				selectedItems.RemoveAt(0);
@@ -164,7 +181,7 @@ public class GameManager : Singleton<GameManager> {
 		if (selectedFingers.Contains(finger)) {
 			// If the inputted finger was already selected, unselect it
 			selectedFingers.Remove(finger);
-		} else if (finger == null) {
+		} else if (finger != null) {
 			// If the number of selected fingers has reached it capacity, remove the first one so a new one can be added
 			if (selectedFingers.Capacity == selectedFingers.Count) {
 				selectedFingers.RemoveAt(0);
@@ -193,7 +210,7 @@ public class GameManager : Singleton<GameManager> {
 		if (selectedHands.Contains(hand)) {
 			// If the inputted hand was already selected, unselect it
 			selectedHands.Remove(hand);
-		} else if (hand == null) {
+		} else if (hand != null) {
 			// If the number of selected hands has reached it capacity, remove the first one so a new one can be added
 			if (selectedHands.Capacity == selectedHands.Count) {
 				selectedHands.RemoveAt(0);
