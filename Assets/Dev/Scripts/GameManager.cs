@@ -239,7 +239,9 @@ public class GameManager : MonoBehaviour {
 		Debug.Log($"Die was selected: {SelectedDie}");
 		Debug.Log($"Hand was selected: {SelectedHand.name}");
 
-		ResetFlags( );
+		// Reset flags and selections
+		CanSelectDie = false;
+		CanSelectHand = false;
 
 		GameState = GameState.ROLLING_DIE;
 
@@ -261,7 +263,9 @@ public class GameManager : MonoBehaviour {
 		Finger finger = SelectedHand.GetFingerAt(dieValue - 1);
 		Debug.Log($"There is {(finger == null ? "not" : "")} a finger at finger index {dieValue - 1}");
 
-		ResetSelections( );
+		// Reset flags and selections
+		SelectedDie = null;
+		SelectedHand = null;
 
 		// Determine what the player can do based on the die value
 		if (finger != null || dieValue == 6) {
@@ -289,8 +293,10 @@ public class GameManager : MonoBehaviour {
 		// Cut the selected finger
 		SelectedFinger.Cut( );
 
-		ResetFlags( );
-		ResetSelections( );
+		// Reset flags and selections
+		CanSelectFinger = true;
+		canSelectAnyFinger = true;
+		SelectedFinger = null;
 
 		GameState = GameState.CHOOSING_DIE;
 
@@ -301,22 +307,6 @@ public class GameManager : MonoBehaviour {
 		GameState = GameState.CHOOSING_DIE;
 
 		yield return null;
-	}
-
-	private void ResetFlags ( ) {
-		CanSelectDie = false;
-		CanSelectItem = false;
-		CanSelectFinger = false;
-		CanSelectHand = false;
-		canSelectAnyFinger = false;
-		canSelectAnyHand = false;
-	}
-
-	private void ResetSelections ( ) {
-		SelectedDie = null;
-		SelectedItem = null;
-		SelectedFinger = null;
-		SelectedHand = null;
 	}
 }
 

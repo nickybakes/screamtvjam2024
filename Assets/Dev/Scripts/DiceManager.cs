@@ -7,8 +7,7 @@ public class DiceManager : MonoBehaviour {
 	[SerializeField] private List<GameObject> dicePrefabs;
 	[Header("Properties")]
 	[SerializeField] private int diceCount;
-	[SerializeField] private float diceRadius;
-	[SerializeField, Range(0f, 360f)] private float diceOffsetDegrees;
+	[SerializeField] private float diceLineLength;
 	[Space]
 	[SerializeField] private Die[ ] _activeDice;
 
@@ -30,7 +29,7 @@ public class DiceManager : MonoBehaviour {
 		}
 
 		// Make dice points in a circle on the table
-		List<Vector3> dicePoints = Utils.GetSpacedPointsOnCircle(transform.position, diceRadius, diceOffsetDegrees * Mathf.Deg2Rad, diceCount);
+		List<Vector3> dicePoints = Utils.GetSpacedPointsOnLine(transform.position, diceLineLength, diceCount);
 		for (int i = 0; i < diceCount; i++) {
 			transform.GetChild(i).position = dicePoints[i];
 		}
