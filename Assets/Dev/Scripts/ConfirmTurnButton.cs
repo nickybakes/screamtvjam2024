@@ -8,10 +8,10 @@ public class ConfirmTurnButton : MonoBehaviour {
 
 	private void Update ( ) {
 		// This button can only be enabled when at least one die and one hand are selected
-		mouseClickCollider.enabled = GameManager.Instance.CheckForSelectionCounts(1, 0, 0, 1);
+		mouseClickCollider.enabled = GameManager.Instance.CheckForMinSelectionCounts(1, 0, 0, 1);
 	}
 
 	private void OnMouseDown ( ) {
-		GameManager.Instance.GameState = GameState.ROLLING_DIE;
+		GameManager.Instance.GameState = GameState.ROLL_DIE;
 	}
 }

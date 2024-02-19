@@ -50,4 +50,18 @@ public class ItemManager : Singleton<ItemManager> {
 		currentItems[itemIndex] = randomItem;
 		Debug.Log($"Generating random item: {randomItem.Name}");
 	}
+
+	public void SwapItems (Item item1, Item item2) {
+		// Get the indices of the two inputted items in the current items list
+		int item1Index = Array.IndexOf(currentItems, item1);
+		int item2Index = Array.IndexOf(currentItems, item2);
+
+		// Swap the transform positions of the items
+		item1.transform.SetParent(itemPositions[item2Index], false);
+		item2.transform.SetParent(itemPositions[item1Index], false);
+
+		// Swap the item positions in the array
+		currentItems[item1Index] = item2;
+		currentItems[item2Index] = item1;
+	}
 }

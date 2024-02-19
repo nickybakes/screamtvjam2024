@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -11,7 +12,7 @@ public class DiceManager : Singleton<DiceManager> {
 	[Header("Properties")]
 	[SerializeField] private float diceLineLength;
 	[Space]
-	[SerializeField] private Die[ ] activeDice;
+	[SerializeField] private Die[ ] currentDice;
 
 	public void OnDrawGizmos ( ) {
 		Gizmos.color = Color.blue;
@@ -32,7 +33,7 @@ public class DiceManager : Singleton<DiceManager> {
 		base.Awake( );
 		OnValidate( );
 
-		activeDice = new Die[dicePositions.Count];
+		currentDice = new Die[dicePositions.Count];
 	}
 
 	/// <summary>
@@ -47,7 +48,7 @@ public class DiceManager : Singleton<DiceManager> {
 		// Spawn the die prefab in the scene at the corresponding die position
 		Die randomDie = Instantiate(randomDiePrefab, diePosition).GetComponent<Die>( );
 
-		activeDice[dieIndex] = randomDie;
+		currentDice[dieIndex] = randomDie;
 		Debug.Log($"Generating random die: {randomDie}");
 	}
 	
@@ -57,21 +58,15 @@ public class DiceManager : Singleton<DiceManager> {
 	/// <param name="die">The die to roll</param>
 	/// <returns>The integer value that is the result of rolling the die</returns>
 	public int RollDie (Die die) {
-		return RollDieAt(Array.IndexOf(activeDice, die));
-	}
-
-	/// <summary>
-	///		Roll the die at the inputted index
-	/// </summary>
-	/// <param name="dieIndex">The index of the die to roll</param>
-	/// <returns>The integer value that is the result of rolling the die</returns>
-	public int RollDieAt (int dieIndex) {
 		// Roll the inputted die and get a die value
-		int dieValue = activeDice[dieIndex].Roll( );
+		int dieValue = die.Roll( );
+
+		// Get the index of the die in the current dice list
+		int dieIndex = Array.IndexOf(currentDice, die);
 
 		// Remove the die from the active dice
-		Destroy(activeDice[dieIndex]);
-		activeDice[dieIndex] = null;
+		currentDice[dieIndex] = null;
+		Destroy(die.gameObject);
 
 		// Generate a new die
 		PlaceRandomDieAt(dieIndex);
