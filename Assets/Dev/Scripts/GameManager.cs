@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public enum GameState {
-	CREATE_BOARD, CHOOSE_DIE, CHOOSE_ITEM, ROLL_DIE, CUT_FINGER, END_TURN,
+	CHOOSE_DIE, CHOOSE_ITEM, ROLL_DIE, CUT_FINGER, END_TURN,
 }
 
 public class GameManager : Singleton<GameManager> {
@@ -33,47 +33,13 @@ public class GameManager : Singleton<GameManager> {
 	public GameState GameState {
 		get => _gameState;
 		set {
-			// Run some functions right before the game state is switched
-			switch (_gameState) {
-				case GameState.CHOOSE_DIE:
-					// Disable selection of new objects but keep previously selected object references
-					DisableDieSelection( );
-					DisableHandSelection( );
-					DisableItemSelection( );
-
-					break;
-				case GameState.ROLL_DIE:
-					DisableDieSelection(true);
-					DisableHandSelection(true);
-					DisableItemSelection(true);
-
-					break;
-			}
-
 			_gameState = value;
 			Debug.Log($"GameState set to: {Enum.GetName(typeof(GameState), value)}");
 
 			// Run some functions as soon as the game state is set
 			switch (_gameState) {
-				case GameState.CREATE_BOARD:
-					// Create dice
-					DiceManager.Instance.PlaceRandomDieAt(0);
-					DiceManager.Instance.PlaceRandomDieAt(1);
-					DiceManager.Instance.PlaceRandomDieAt(2);
-					DiceManager.Instance.PlaceRandomDieAt(3);
-
-					// Create items
-					ItemManager.Instance.PlaceRandomItemAt(0);
-					ItemManager.Instance.PlaceRandomItemAt(1);
-					ItemManager.Instance.PlaceRandomItemAt(2);
-					ItemManager.Instance.PlaceRandomItemAt(3);
-					ItemManager.Instance.PlaceRandomItemAt(4);
-
-					// Have the player go first
-					activePerson = player;
-
-					GameState = GameState.CHOOSE_DIE;
-
+				case GameState.END_TURN:
+					StartCoroutine(HandleEndTurnState( ));
 					break;
 				case GameState.CHOOSE_DIE:
 					// Enable hand, die, and item selection
@@ -83,27 +49,13 @@ public class GameManager : Singleton<GameManager> {
 
 					break;
 				case GameState.ROLL_DIE:
-					// If two items were selected, swap their places
-					if (selectedItems.Count == 2) {
-						ItemManager.Instance.SwapItems(selectedItems[0], selectedItems[1]);
-					}
-
-					// Roll the die to get a random value
-					int dieValue = DiceManager.Instance.RollDie(selectedDice[0]);
-
-					// Get the finger at the rolled dice value on the selected hand
-					// Need to subtract 1 from the die value to turn it into an index
-					Finger rolledFinger = selectedHands[0].GetFingerAt(dieValue - 1);
-
-					// Determine what the active person can do based on the die value
-					// If the rolled finger is not null or the die value is 6, then the active person can chop off a finger
-					// If the rolled finger is null, then the active person can choose an item to use
-					if (rolledFinger != null || dieValue == 6) {
-						GameState = GameState.CUT_FINGER;
-					} else {
-						GameState = GameState.CHOOSE_ITEM;
-					}
-
+					StartCoroutine(HandleRollDieState( ));
+					break;
+				case GameState.CUT_FINGER:
+					StartCoroutine(HandleCutFingerState( ));
+					break;
+				case GameState.CHOOSE_ITEM:
+					StartCoroutine(HandleChooseItemState( ));
 					break;
 			}
 		}
@@ -139,13 +91,90 @@ public class GameManager : Singleton<GameManager> {
 	}
 
 	private void Start ( ) {
-		GameState = GameState.CREATE_BOARD;
+		// Have the player go first
+		activePerson = player;
+
+		GameState = GameState.END_TURN;
 	}
 
-	private void Update ( ) {
-		switch (GameState) {
+	private IEnumerator HandleEndTurnState ( ) {
+		// Fill up table with new items and dice
+		yield return DiceManager.Instance.FillEmptyDicePositions( );
+		yield return ItemManager.Instance.FillEmptyItemPositions( );
 
+		// Switch the player who is the active person
+		// activePerson = (activePerson == player ? opponent : player);
+
+		GameState = GameState.CHOOSE_DIE;
+
+		yield return null;
+	}
+
+	private IEnumerator HandleRollDieState ( ) {
+		// Disable selection of new objects but keep previously selected object references
+		DisableDieSelection( );
+		DisableHandSelection( );
+		DisableItemSelection( );
+
+		// If two items were selected, swap their places
+		if (selectedItems.Count == 2) {
+			yield return ItemManager.Instance.SwapItems(selectedItems[0], selectedItems[1]);
 		}
+
+		// Roll the die to get a random value
+		int dieValue = DiceManager.Instance.RollDie(selectedDice[0]);
+
+		// Get the finger at the rolled dice value on the selected hand
+		// Need to subtract 1 from the die value to turn it into an index
+		Finger rolledFinger = selectedHands[0].GetFingerAt(dieValue - 1);
+
+		// Reset all references to the selection
+		DisableDieSelection(clearSelectedDice: true);
+		DisableHandSelection(clearSelectedHands: true);
+		DisableItemSelection(clearSelectedItems: true);
+
+		// Determine what the active person can do based on the die value
+		// If the rolled finger is not null or the die value is 6, then the active person can chop off a finger
+		// If the rolled finger is null, then the active person can choose an item to use
+		if (rolledFinger != null || dieValue == 6) {
+			GameState = GameState.CUT_FINGER;
+		} else {
+			GameState = GameState.CHOOSE_ITEM;
+		}
+
+		yield return null;
+	}
+
+	private IEnumerator HandleCutFingerState ( ) {
+		// Enable the selection of fingers
+		EnableFingerSelection(anyFinger: true);
+
+		// Wait until the active person selects a finger
+		yield return new WaitUntil(( ) => selectedFingers.Count == 1);
+
+		// Cut off the finger that is selected
+		/// TODO: Add finger cutting animation
+		selectedFingers[0].Cut( );
+
+		DisableFingerSelection(clearSelectedFingers: true);
+
+		GameState = GameState.END_TURN;
+
+		yield return null;
+	}
+
+	private IEnumerator HandleChooseItemState ( ) {
+		EnableItemSelection( );
+
+		// Wait until the active person selects an item
+		yield return new WaitUntil(( ) => selectedItems.Count == 1);
+
+		// Use the selected item
+		yield return selectedItems[0].Use( );
+
+		GameState = GameState.END_TURN;
+
+		yield return null;
 	}
 
 	/// <summary>

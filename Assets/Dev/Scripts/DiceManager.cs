@@ -40,7 +40,7 @@ public class DiceManager : Singleton<DiceManager> {
 	///		Place a random die at a specific index
 	/// </summary>
 	/// <param name="dieIndex">The index to place a new die at</param>
-	public void PlaceRandomDieAt (int dieIndex) {
+	public IEnumerator PlaceRandomDieAt (int dieIndex) {
 		// Get a random die prefab
 		GameObject randomDiePrefab = dicePrefabs[Random.Range(0, dicePrefabs.Count)];
 		Transform diePosition = dicePositions[dieIndex];
@@ -50,8 +50,10 @@ public class DiceManager : Singleton<DiceManager> {
 
 		currentDice[dieIndex] = randomDie;
 		Debug.Log($"Generating random die: {randomDie}");
+
+		yield return null;
 	}
-	
+
 	/// <summary>
 	///		Roll the inputted die
 	/// </summary>
@@ -68,9 +70,22 @@ public class DiceManager : Singleton<DiceManager> {
 		currentDice[dieIndex] = null;
 		Destroy(die.gameObject);
 
-		// Generate a new die
-		PlaceRandomDieAt(dieIndex);
-
 		return dieValue;
+	}
+
+	/// <summary>
+	///		Fill all of the empty dice positions on the table with a new die
+	/// </summary>
+	/// <returns></returns>
+	public IEnumerator FillEmptyDicePositions ( ) {
+		// Loop through the entire current dice list
+		for (int i = 0; i < currentDice.Length; i++) {
+			// If there is a die that has not been set yet, place a new die
+			if (currentDice[i] == null) {
+				yield return PlaceRandomDieAt(i);
+			}
+		}
+
+		yield return null;
 	}
 }

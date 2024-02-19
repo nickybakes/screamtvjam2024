@@ -39,29 +39,57 @@ public class ItemManager : Singleton<ItemManager> {
 	///		Place a random item at a specific index
 	/// </summary>
 	/// <param name="itemIndex">The index to place a new item at</param>
-	public void PlaceRandomItemAt (int itemIndex) {
+	public IEnumerator PlaceRandomItemAt (int itemIndex) {
 		// Get a random item prefab
 		GameObject randomItemPrefab = itemPrefabs[Random.Range(0, itemPrefabs.Count)];
 		Transform itemPosition = itemPositions[itemIndex];
 
 		// Spawn the item prefab in the scene at the corresponding item position
 		Item randomItem = Instantiate(randomItemPrefab, itemPosition).GetComponent<Item>( );
+		/// TODO: Tween position of item when it spawns
 
 		currentItems[itemIndex] = randomItem;
 		Debug.Log($"Generating random item: {randomItem.Name}");
+
+		yield return null;
 	}
 
-	public void SwapItems (Item item1, Item item2) {
+	/// <summary>
+	///		Switch the indices of two items
+	/// </summary>
+	/// <param name="item1">The first item to switch</param>
+	/// <param name="item2">The second item to switch</param>
+	/// <returns></returns>
+	public IEnumerator SwapItems (Item item1, Item item2) {
 		// Get the indices of the two inputted items in the current items list
 		int item1Index = Array.IndexOf(currentItems, item1);
 		int item2Index = Array.IndexOf(currentItems, item2);
 
 		// Swap the transform positions of the items
+		/// TODO: Tween positions of items as they are swapped
 		item1.transform.SetParent(itemPositions[item2Index], false);
 		item2.transform.SetParent(itemPositions[item1Index], false);
 
 		// Swap the item positions in the array
 		currentItems[item1Index] = item2;
 		currentItems[item2Index] = item1;
+
+		yield return null;
+	}
+
+	/// <summary>
+	///		Fill all of the empty item positions on the table with a new random item
+	/// </summary>
+	/// <returns></returns>
+	public IEnumerator FillEmptyItemPositions ( ) {
+		// Loop through the entire current items list
+		for (int i = 0; i < currentItems.Length; i++) {
+			// If there is an item that has not been set yet, place a new item
+			if (currentItems[i] == null) {
+				yield return PlaceRandomItemAt(i);
+			}
+		}
+
+		yield return null;
 	}
 }

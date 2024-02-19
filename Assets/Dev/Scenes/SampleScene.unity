@@ -797,7 +797,7 @@ MonoBehaviour:
   - {fileID: 729382989}
   - {fileID: 1540513642}
   diceLineLength: 13.125
-  activeDice: []
+  currentDice: []
 --- !u!114 &599121432 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3056701489707413019, guid: 00f51f7c62895ff4aaabf3f5ba43e60e,
@@ -1353,7 +1353,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1628367585}
   opponent: {fileID: 128566140}
-  confirmChoiceButton: {fileID: 0}
   _gameState: 0
   activePerson: {fileID: 0}
   selectedDice: []
@@ -1366,7 +1365,6 @@ MonoBehaviour:
   _canSelectHands: 0
   canSelectAnyFinger: 0
   canSelectAnyHand: 0
-  confirmChoice: 0
 --- !u!1001 &4205071822680864670
 PrefabInstance:
   m_ObjectHideFlags: 0

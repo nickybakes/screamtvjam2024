@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Item : MonoBehaviour {
+public abstract class Item : MonoBehaviour {
 	[Header("References")]
 	[SerializeField] private BoxCollider mouseClickCollider;
 	[Header("Properties")]
@@ -13,11 +13,17 @@ public class Item : MonoBehaviour {
 	/// </summary>
 	public string Name => _name;
 
-	private void Update ( ) {
+	protected void Update ( ) {
 		mouseClickCollider.enabled = GameManager.Instance.CanSelectItems;
 	}
 
-	private void OnMouseDown ( ) {
+	protected void OnMouseDown ( ) {
 		GameManager.Instance.SelectItem(this);
 	}
+
+	/// <summary>
+	///		Use this item
+	/// </summary>
+	/// <returns></returns>
+	public abstract IEnumerator Use ( );
 }
