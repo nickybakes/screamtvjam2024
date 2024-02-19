@@ -71,5 +71,35 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8732528088860608163, guid: 03374007884a1a240b741eda1ac8da74,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7171208016160785748}
   m_SourcePrefab: {fileID: 100100000, guid: 03374007884a1a240b741eda1ac8da74, type: 3}
+--- !u!65 &2870983183838543433 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 4304331542903373706, guid: 03374007884a1a240b741eda1ac8da74,
+    type: 3}
+  m_PrefabInstance: {fileID: 2047951754809786819}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7303683294912776032 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8732528088860608163, guid: 03374007884a1a240b741eda1ac8da74,
+    type: 3}
+  m_PrefabInstance: {fileID: 2047951754809786819}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7171208016160785748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7303683294912776032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd9ef00d8a329a14e868b6bcfc28f551, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mouseClickCollider: {fileID: 2870983183838543433}
+  _name: Ad Break
