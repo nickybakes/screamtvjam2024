@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,8 +12,6 @@ public class GameManager : Singleton<GameManager> {
 	[Header("References")]
 	[SerializeField] private Person player;
 	[SerializeField] private Person opponent;
-	[Space]
-	[SerializeField] private Button confirmChoiceButton;
 	[Header("Properties")]
 	[SerializeField] private GameState _gameState;
 	[SerializeField] private Person activePerson;
@@ -27,7 +26,6 @@ public class GameManager : Singleton<GameManager> {
 	[SerializeField] private bool _canSelectHands;
 	[SerializeField] private bool canSelectAnyFinger;
 	[SerializeField] private bool canSelectAnyHand;
-	[SerializeField] private bool confirmChoice;
 
 	/// <summary>
 	///		The current state of the game
@@ -35,18 +33,45 @@ public class GameManager : Singleton<GameManager> {
 	public GameState GameState {
 		get => _gameState;
 		set {
-			_gameState = value;
+			// Run some functions right before the game state is switched
+			switch (_gameState) {
+				case GameState.CHOOSING_DIE:
+					DisableDieSelection( );
+					DisableItemSelection( );
+					DisableHandSelection( );
 
+					break;
+			}
+
+			_gameState = value;
+			Debug.Log($"GameState set to: {Enum.GetName(typeof(GameState), value)}");
+
+			// Run some functions as soon as the game state is set
 			switch (_gameState) {
 				case GameState.CREATING_BOARD:
+					// Create dice
+					DiceManager.Instance.PlaceRandomDieAt(0);
+					DiceManager.Instance.PlaceRandomDieAt(1);
+					DiceManager.Instance.PlaceRandomDieAt(2);
+					DiceManager.Instance.PlaceRandomDieAt(3);
+
+					// Create items
+					ItemManager.Instance.PlaceRandomItemAt(0);
+					ItemManager.Instance.PlaceRandomItemAt(1);
+					ItemManager.Instance.PlaceRandomItemAt(2);
+					ItemManager.Instance.PlaceRandomItemAt(3);
+					ItemManager.Instance.PlaceRandomItemAt(4);
+
+					activePerson = player;
+
+					GameState = GameState.CHOOSING_DIE;
+
 					break;
 				case GameState.CHOOSING_DIE:
-					break;
-				case GameState.ROLLING_DIE:
-					break;
-				case GameState.CUTTING_FINGER:
-					break;
-				case GameState.CHOOSING_ITEM:
+					EnableDieSelection( );
+					EnableItemSelection(itemCapacity: 2);
+					EnableHandSelection( );
+
 					break;
 			}
 		}
@@ -79,38 +104,15 @@ public class GameManager : Singleton<GameManager> {
 		selectedItems = new List<Item>(1);
 		selectedFingers = new List<Finger>(1);
 		selectedHands = new List<Hand>(1);
-
-		// Set on click events for buttons
-		confirmChoiceButton.onClick.AddListener(( ) => confirmChoice = true);
 	}
 
 	private void Start ( ) {
 		GameState = GameState.CREATING_BOARD;
-
-		// Create dice
-		DiceManager.Instance.PlaceRandomDieAt(0);
-		DiceManager.Instance.PlaceRandomDieAt(1);
-		DiceManager.Instance.PlaceRandomDieAt(2);
-
-		// Create items
-		ItemManager.Instance.PlaceRandomItemAt(0);
-		ItemManager.Instance.PlaceRandomItemAt(1);
-		ItemManager.Instance.PlaceRandomItemAt(2);
-		ItemManager.Instance.PlaceRandomItemAt(3);
-		ItemManager.Instance.PlaceRandomItemAt(4);
-
-		activePerson = player;
-
-		EnableDieSelection( );
-		EnableItemSelection(itemCapacity: 2);
 	}
 
 	private void Update ( ) {
 		switch (GameState) {
-			case GameState.CHOOSING_DIE:
-				// Only make the player's choice confirmable if they have selected a hand and a die
-				// confirmChoiceButton.interactable = SelectedDie != null && SelectedHand != null;
-
+			case GameState.ROLLING_DIE:
 				break;
 		}
 	}
@@ -222,7 +224,7 @@ public class GameManager : Singleton<GameManager> {
 	}
 
 	/// <summary>
-	///		Enable die selection flags
+	///		Enable the ability for the active person to select dice
 	/// </summary>
 	/// <param name="diceCapacity">Set a new capacity of dice that can be selected at one time</param>
 	private void EnableDieSelection (int diceCapacity = 1) {
@@ -237,14 +239,7 @@ public class GameManager : Singleton<GameManager> {
 	}
 
 	/// <summary>
-	///		Disable die selection flags
-	/// </summary>
-	private void DisableDieSelection ( ) {
-		CanSelectDice = false;
-	}
-
-	/// <summary>
-	///		Enable item selection flags
+	///		Enable the ability for the active person to select items
 	/// </summary>
 	/// <param name="itemCapacity">Set a new capacity of items that can be selected at one time</param>
 	private void EnableItemSelection (int itemCapacity = 1) {
@@ -259,14 +254,7 @@ public class GameManager : Singleton<GameManager> {
 	}
 
 	/// <summary>
-	///		Disable item selection flags
-	/// </summary>
-	private void DisableItemSelection ( ) {
-		CanSelectItems = false;
-	}
-
-	/// <summary>
-	///		Enable finger selection flags
+	///		Enable the ability for the active person to select fingers
 	/// </summary>
 	/// <param name="anyFinger">Whether or not any finger, regardless of active person, can be selected</param>
 	/// <param name="fingerCapacity">Set a new capacity of fingers that can be selected at one time</param>
@@ -283,18 +271,11 @@ public class GameManager : Singleton<GameManager> {
 	}
 
 	/// <summary>
-	///		Disable finger selection flags
-	/// </summary>
-	private void DisableFingerSelection ( ) {
-		CanSelectFingers = false;
-	}
-
-	/// <summary>
-	///		Enable hand selection flags
+	///		Enable the ability for the active person to select hands
 	/// </summary>
 	/// <param name="anyHand">Whether or not any hand, regardless of active person, can be selected</param>
 	/// <param name="handCapacity">Set a new capacity of hands that can be selected at one time</param>
-	private void SetSelectableHandCount (bool anyHand = false, int handCapacity = 1) {
+	private void EnableHandSelection (bool anyHand = false, int handCapacity = 1) {
 		CanSelectHands = true;
 		canSelectAnyHand = anyHand;
 
@@ -307,114 +288,53 @@ public class GameManager : Singleton<GameManager> {
 	}
 
 	/// <summary>
-	///		Disable hand selection flags
+	///		Disable the ability for the active person to select dice
+	/// </summary>
+	private void DisableDieSelection ( ) {
+		CanSelectDice = false;
+		selectedDice.Clear( );
+	}
+
+	/// <summary>
+	///		Disable the ability for the active person to select items
+	/// </summary>
+	private void DisableItemSelection ( ) {
+		CanSelectItems = false;
+		selectedItems.Clear( );
+	}
+
+	/// <summary>
+	///		Disable the ability for the active person to select fingers
+	/// </summary>
+	private void DisableFingerSelection ( ) {
+		CanSelectFingers = false;
+		selectedFingers.Clear( );
+	}
+
+	/// <summary>
+	///		Disable the ability for the active person to select hands
 	/// </summary>
 	private void DisableHandSelection ( ) {
 		CanSelectHands = false;
+		selectedHands.Clear( );
 	}
 
-	/*
-	private IEnumerator CreateBoardState ( ) {
-		// Create dice
-		diceManager.PlaceRandomDieAt(0);
-		diceManager.PlaceRandomDieAt(1);
-		diceManager.PlaceRandomDieAt(2);
-
-		// Create items
-		itemManager.PlaceRandomItemAt(0);
-		itemManager.PlaceRandomItemAt(1);
-		itemManager.PlaceRandomItemAt(2);
-		itemManager.PlaceRandomItemAt(3);
-		itemManager.PlaceRandomItemAt(4);
-
-		ActivePerson = player;
-
-		GameState = GameState.CHOOSING_DIE;
-
-		yield return null;
+	/// <summary>
+	///		Check for selection counts across all things that can be selected
+	/// </summary>
+	/// <param name="dieCount">The minimum die count that need to be selected</param>
+	/// <param name="itemCount">The minimum item count that need to be selected</param>
+	/// <param name="fingerCount">The minimum finger count that need to be selected</param>
+	/// <param name="handCount">The minimum hand count that need to be selected</param>
+	/// <returns>true if all of the inputted amounts are less than or equal to their respective selected object amounts, false otherwise</returns>
+	public bool CheckForSelectionCounts (int dieCount, int itemCount, int fingerCount, int handCount) {
+		return (
+			selectedDice.Count >= dieCount &&
+			selectedItems.Count >= itemCount &&
+			selectedFingers.Count >= fingerCount &&
+			selectedHands.Count >= handCount
+		);
 	}
-
-	private IEnumerator ChoosingDieState ( ) {
-		// Enable selection flags
-		CanSelectDie = true;
-		CanSelectHand = true;
-
-		// Wait for the active person to make a selection and confirm it
-		yield return new WaitUntil(( ) => confirmChoice);
-		confirmChoice = false;
-		Debug.Log($"Die was selected: {SelectedDie}");
-		Debug.Log($"Hand was selected: {SelectedHand.name}");
-
-		// Reset flags and selections
-		CanSelectDie = false;
-		CanSelectHand = false;
-
-		GameState = GameState.ROLLING_DIE;
-
-		yield return null;
-	}
-
-	private IEnumerator RollingDieState ( ) {
-		// Roll the dice
-		int dieValue = SelectedDie.Roll( );
-		Debug.Log($"Die was rolled for a value of {dieValue}");
-
-		// Remove the selected die from the list of dice and replace it with a new die
-		diceManager.ActiveDice[SelectedDie.Index] = null;
-		diceManager.PlaceRandomDieAt(SelectedDie.Index);
-		Destroy(SelectedDie.gameObject);
-
-		// Get the finger that corresponds to the die value
-		// A die value of 6 does not map to a finger index but should still be used
-		Finger finger = SelectedHand.GetFingerAt(dieValue - 1);
-		Debug.Log($"There is {(finger == null ? "not" : "")} a finger at finger index {dieValue - 1}");
-
-		// Reset flags and selections
-		SelectedDie = null;
-		SelectedHand = null;
-
-		// Determine what the player can do based on the die value
-		if (finger != null || dieValue == 6) {
-			// If the finger is not null or the die value was 6, then the active player gets to chop off a finger
-			Debug.Log($"{ActivePerson.name} can chop off a finger");
-			GameState = GameState.CUTTING_FINGER;
-		} else {
-			// If the finger is null, the the active person gets to choose an item
-			Debug.Log($"{ActivePerson.name} can select an item");
-			GameState = GameState.CHOOSING_ITEM;
-		}
-
-		yield return null;
-	}
-
-	private IEnumerator CuttingFingerState ( ) {
-		// Enable selection flags
-		CanSelectFinger = true;
-		canSelectAnyFinger = true;
-
-		// Wait for the active person to select a finger
-		yield return new WaitUntil(( ) => SelectedFinger != null);
-		Debug.Log($"{ActivePerson.name} chopped {SelectedFinger.Hand.name} {SelectedFinger.name}");
-
-		// Cut the selected finger
-		SelectedFinger.Cut( );
-
-		// Reset flags and selections
-		CanSelectFinger = true;
-		canSelectAnyFinger = true;
-		SelectedFinger = null;
-
-		GameState = GameState.CHOOSING_DIE;
-
-		yield return null;
-	}
-
-	private IEnumerator ChoosingItemState ( ) {
-		GameState = GameState.CHOOSING_DIE;
-
-		yield return null;
-	}
-	*/
 }
 
 /*
