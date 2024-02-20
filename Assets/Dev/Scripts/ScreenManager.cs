@@ -4,31 +4,22 @@ using System.Linq;
 using TMPro;
 using UnityEditor.VersionControl;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ScreenManager : MonoBehaviour {
 	[Header("References")]
 	[SerializeField] private GameObject chatMessagePrefab;
-	[SerializeField] private Transform chatMessageParent;
-	[SerializeField] private TextMeshPro chatBoxText;
+	[SerializeField] private RectTransform chatMessageParent;
+	[SerializeField] private RectTransform rectTransform;
+	[Header("Properties")]
 	[SerializeField] private List<string> usernameList;
 	[SerializeField] private List<string> messageList;
-	[Header("Properties")]
-	[SerializeField] private Vector2 screenSize;
 	[SerializeField] private string usernameHexCode;
 	[SerializeField] private float maxChatTimer;
 
 	private float chatTimer;
 
-	private void OnValidate ( ) {
-		GetComponent<RectTransform>( ).sizeDelta = screenSize;
-		GetComponent<SpriteRenderer>( ).size = screenSize;
-	}
-
 	private void Awake ( ) {
-		OnValidate( );
-
-		Debug.Log(GetComponentInChildren<TextMeshPro>( ).textInfo.pageCount);
-
 		usernameList = new List<string>( ) { "frank", "nick", "hannah" };
 		messageList = new List<string>( ) { "this is a pretty long message, should probably wrap a couple of times", "wow!", "this chat feature is so cool!!!!!" };
 	}
@@ -41,8 +32,17 @@ public class ScreenManager : MonoBehaviour {
 			// Set a random chat time for the next chat to appear
 			chatTimer = Random.Range(0f, maxChatTimer);
 
-			if (chatBoxText.isTextOverflowing) {
+			float chatHeight = 0f;
+			// Loop through all of the chat messages and remove the ones that go off the top of the screen
+			for (int i = chatMessageParent.childCount - 1; i >= 0; i--) {
+				// If the chat messages have not exceeded the bounds of the screen, increment the chat height counter until they do
+				chatHeight += LayoutUtility.GetPreferredHeight(chatMessageParent.GetChild(i).GetComponent<RectTransform>( ));
 
+				// If the chat height exceeds the bounds of the screen, then destroy the chat message object that overflows
+				// Subtracting 2 because of the horizontal layout group element padding
+				if (chatHeight > chatMessageParent.rect.height) {
+					Destroy(chatMessageParent.GetChild(i).gameObject);
+				}
 			}
 		}
 
