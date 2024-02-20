@@ -92,9 +92,9 @@ public class GameManager : Singleton<GameManager> {
 
 	private void Start ( ) {
 		// Have the player go first
-		activePerson = player;
+		// activePerson = player;
 
-		GameState = GameState.END_TURN;
+		// GameState = GameState.END_TURN;
 	}
 
 	private IEnumerator HandleEndTurnState ( ) {
