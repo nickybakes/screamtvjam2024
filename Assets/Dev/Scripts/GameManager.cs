@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public enum GameState {
 	CHOOSE_DIE, CHOOSE_ITEM, ROLL_DIE, CUT_FINGER, END_TURN,
@@ -42,11 +43,7 @@ public class GameManager : Singleton<GameManager> {
 					StartCoroutine(HandleEndTurnState( ));
 					break;
 				case GameState.CHOOSE_DIE:
-					// Enable hand, die, and item selection
-					EnableDieSelection( );
-					EnableHandSelection( );
-					EnableItemSelection(itemCapacity: 2);
-
+					StartCoroutine(HandleChooseDieState( ));
 					break;
 				case GameState.ROLL_DIE:
 					StartCoroutine(HandleRollDieState( ));
@@ -92,11 +89,17 @@ public class GameManager : Singleton<GameManager> {
 
 	private void Start ( ) {
 		// Have the player go first
-		// activePerson = player;
+		activePerson = player;
 
-		// GameState = GameState.END_TURN;
+		GameState = GameState.END_TURN;
 	}
 
+	#region GameState Handler Functions
+
+	/// <summary>
+	///		Handle the end turn game state
+	/// </summary>
+	/// <returns></returns>
 	private IEnumerator HandleEndTurnState ( ) {
 		// Fill up table with new items and dice
 		yield return DiceManager.Instance.FillEmptyDicePositions( );
@@ -110,6 +113,24 @@ public class GameManager : Singleton<GameManager> {
 		yield return null;
 	}
 
+	/// <summary>
+	///		Handle the choose die game state
+	/// </summary>
+	/// <returns></returns>
+	private IEnumerator HandleChooseDieState ( ) {
+		// Enable hand, die, and item selection
+		EnableDieSelection( );
+		EnableHandSelection( );
+		EnableItemSelection(itemCapacity: 2);
+
+		// The game state gets set once the confirm turn button is pushed
+		yield return null;
+	}
+
+	/// <summary>
+	///		Handle the roll die game state
+	/// </summary>
+	/// <returns></returns>
 	private IEnumerator HandleRollDieState ( ) {
 		// Disable selection of new objects but keep previously selected object references
 		DisableDieSelection( );
@@ -145,6 +166,10 @@ public class GameManager : Singleton<GameManager> {
 		yield return null;
 	}
 
+	/// <summary>
+	///		Handle the cutting finger game state
+	/// </summary>
+	/// <returns></returns>
 	private IEnumerator HandleCutFingerState ( ) {
 		// Enable the selection of fingers
 		EnableFingerSelection(anyFinger: true);
@@ -163,6 +188,10 @@ public class GameManager : Singleton<GameManager> {
 		yield return null;
 	}
 
+	/// <summary>
+	///		Handle the choose item game state
+	/// </summary>
+	/// <returns></returns>
 	private IEnumerator HandleChooseItemState ( ) {
 		EnableItemSelection( );
 
@@ -176,6 +205,20 @@ public class GameManager : Singleton<GameManager> {
 
 		yield return null;
 	}
+
+	#endregion
+
+	#region Opponent Handler Functions
+
+	private IEnumerator HandleOpponentChooseDieState ( ) {
+		yield return new WaitForSeconds(Random.Range(1f, 2f));
+
+		GameState = GameState.ROLL_DIE;
+
+		yield return null;
+	}
+
+	#endregion
 
 	/// <summary>
 	///		Select a die
