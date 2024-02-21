@@ -5,18 +5,11 @@ using UnityEngine;
 public class Person : MonoBehaviour {
 	[Header("References")]
 	[SerializeField] private Hand[ ] hands;
-	[Header("Properties")]
-	[SerializeField] private int _audienceRating;
 
 	/// <summary>
 	///		The total finger count of this person
 	/// </summary>
 	public int FingerCount => hands[0].FingerCount + hands[1].FingerCount;
-
-	/// <summary>
-	///		The audience rating of this person on a scale from 0 to 10
-	/// </summary>
-	public int AudienceRating { get => _audienceRating; set => _audienceRating = value; }
 
 	/// <summary>
 	///		Get a reference to a finger at the specified index and on the specified hand

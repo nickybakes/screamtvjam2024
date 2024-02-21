@@ -26,10 +26,25 @@ public class ScreenManager : Singleton<ScreenManager> {
 	[SerializeField] private List<string> messageList;
 	[SerializeField] private float maxChatTimer;
 	[SerializeField] private float maxViewerTimer;
+	[SerializeField] private int _playerAudienceRating;
 
 	private float chatTimer;
 	private float viewerTimer;
 
+	/// <summary>
+	///		The player's current audience rating. The opponent's rating will always be the inverse of this.
+	/// </summary>
+	public int PlayerAudienceRating {
+		get => _playerAudienceRating;
+		set {
+			// Make sure the player audience rating is always between 0 and 10
+			_playerAudienceRating = Mathf.Clamp(value, 0, 10);
+		}
+	}
+
+	/// <summary>
+	///		The current screen state of the screen manager
+	/// </summary>
 	public ScreenState ScreenState {
 		get => _screenState;
 		set {
@@ -51,6 +66,7 @@ public class ScreenManager : Singleton<ScreenManager> {
 	protected override void Awake ( ) {
 		base.Awake( );
 
+		/// TODO: Load usernames and messages from file
 		usernameList = new List<string>( ) { "frank", "nick", "hannah" };
 		messageList = new List<string>( ) { "this is a pretty long message, should probably wrap a couple of times", "wow!", "this chat feature is so cool!!!!!" };
 	}
@@ -130,18 +146,20 @@ public class ScreenManager : Singleton<ScreenManager> {
 		// Set all bars to be invisible and to the right sprite
 		foreach (SpriteRenderer playerBarSpriteRenderer in playerBarList) {
 			playerBarSpriteRenderer.enabled = false;
-			playerBarSpriteRenderer.sprite = player.AudienceRating >= opponent.AudienceRating ? pollFilledSprite : pollOutlineSprite;
+			// If the audience rating is 5 or above, then the player is winning (or tied)
+			playerBarSpriteRenderer.sprite = PlayerAudienceRating >= 5 ? pollFilledSprite : pollOutlineSprite;
 		}
 		foreach (SpriteRenderer opponentBarSpriteRenderer in opponentBarList) {
 			opponentBarSpriteRenderer.enabled = false;
-			opponentBarSpriteRenderer.sprite = player.AudienceRating <= opponent.AudienceRating ? pollFilledSprite : pollOutlineSprite;
+			// If the audience rating is 5 or less, then the opponent is winning (or tied)
+			opponentBarSpriteRenderer.sprite = PlayerAudienceRating <= 5 ? pollFilledSprite : pollOutlineSprite;
 		}
 
 		// Loop and enable each bar from bottom to top
 		while (barCounter > 0) {
 			// Activate specific bars based on the player's and opponent's audience rating
-			playerBarList[barCounter - 1].enabled = (barCounter >= 10 - player.AudienceRating);
-			opponentBarList[barCounter - 1].enabled = (barCounter >= 10 - opponent.AudienceRating);
+			playerBarList[barCounter - 1].enabled = (barCounter > 10 - PlayerAudienceRating);
+			opponentBarList[barCounter - 1].enabled = (barCounter > PlayerAudienceRating);
 
 			barCounter--;
 			// This means that the entire animation will take 2 seconds (0.2s x 10 bars)
