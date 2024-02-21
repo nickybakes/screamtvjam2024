@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Die : MonoBehaviour {
 	[Header("References")]
-	[SerializeField] private BoxCollider mouseClickCollider;
 	[SerializeField] private Material[ ] faceMaterials;
 	[SerializeField] private Rigidbody dieRigidbody;
 	[Header("Properties")]
@@ -42,10 +41,6 @@ public class Die : MonoBehaviour {
 		/// TODO: Set face materials
 		/// Face materials need to match a specific order of directions in order to accuratly get the top value of the die when it is rolled
 		/// Faces will be applied in the order: up, forward, right, -forward (back), -right (left), -up (down)
-	}
-
-	private void Update ( ) {
-		mouseClickCollider.enabled = GameManager.Instance.CanSelectDice;
 	}
 
 	private void OnMouseDown ( ) {

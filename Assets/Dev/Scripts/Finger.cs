@@ -9,7 +9,6 @@ public enum FingerState {
 public class Finger : MonoBehaviour {
 	[Header("References")]
 	[SerializeField] private Hand _hand;
-	[SerializeField] private BoxCollider mouseClickCollider;
 	[Header("Properties")]
 	[SerializeField] private FingerState _fingerState;
 
@@ -38,10 +37,6 @@ public class Finger : MonoBehaviour {
 	///		The person that this finger belongs to
 	/// </summary>
 	public Person Person => Hand.Person;
-
-	private void Update ( ) {
-		mouseClickCollider.enabled = GameManager.Instance.CanSelectFingers;
-	}
 
 	private void OnMouseDown ( ) {
 		GameManager.Instance.SelectFinger(this);
