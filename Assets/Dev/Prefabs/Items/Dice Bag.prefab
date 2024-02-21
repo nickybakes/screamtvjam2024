@@ -13,6 +13,11 @@ PrefabInstance:
       propertyPath: _name
       value: Dice Bag
       objectReference: {fileID: 0}
+    - target: {fileID: 2317023829450034915, guid: 03374007884a1a240b741eda1ac8da74,
+        type: 3}
+      propertyPath: _name
+      value: Dice Bag
+      objectReference: {fileID: 0}
     - target: {fileID: 8198446265344732993, guid: 03374007884a1a240b741eda1ac8da74,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -71,35 +76,5 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8732528088860608163, guid: 03374007884a1a240b741eda1ac8da74,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4989593852082010220}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 03374007884a1a240b741eda1ac8da74, type: 3}
---- !u!1 &2437444314930953876 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8732528088860608163, guid: 03374007884a1a240b741eda1ac8da74,
-    type: 3}
-  m_PrefabInstance: {fileID: 6405146400243939383}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &4989593852082010220
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2437444314930953876}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc4d5ec9f64e3dd4d8fb9249676987c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mouseClickCollider: {fileID: 7160626705032988605}
-  _name: Dice Bag
---- !u!65 &7160626705032988605 stripped
-BoxCollider:
-  m_CorrespondingSourceObject: {fileID: 4304331542903373706, guid: 03374007884a1a240b741eda1ac8da74,
-    type: 3}
-  m_PrefabInstance: {fileID: 6405146400243939383}
-  m_PrefabAsset: {fileID: 0}

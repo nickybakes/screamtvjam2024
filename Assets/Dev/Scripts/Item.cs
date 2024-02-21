@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Item : MonoBehaviour {
+public class Item : MonoBehaviour {
 	[Header("References")]
 	[SerializeField] private BoxCollider mouseClickCollider;
 	[Header("Properties")]
@@ -20,10 +20,4 @@ public abstract class Item : MonoBehaviour {
 	protected void OnMouseDown ( ) {
 		GameManager.Instance.SelectItem(this);
 	}
-
-	/// <summary>
-	///		Use this item
-	/// </summary>
-	/// <returns></returns>
-	public abstract IEnumerator Use ( );
 }

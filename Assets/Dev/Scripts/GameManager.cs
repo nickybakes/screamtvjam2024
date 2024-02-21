@@ -27,6 +27,7 @@ public class GameManager : Singleton<GameManager> {
 	[SerializeField] private bool _canSelectItems;
 	[SerializeField] private bool _canSelectFingers;
 	[SerializeField] private bool _canSelectHands;
+	[SerializeField] private bool _canSelectMissingFinger;
 	[SerializeField] private bool canSelectAnyFinger;
 	[SerializeField] private bool canSelectAnyHand;
 
@@ -93,6 +94,11 @@ public class GameManager : Singleton<GameManager> {
 	///		Whether or not hands can be selected
 	/// </summary>
 	public bool CanSelectHands { get => _canSelectHands; private set => _canSelectHands = value; }
+
+	/// <summary>
+	///		Whether or not the active person can select missing fingers or attached fingers
+	/// </summary>
+	public bool CanSelectMissingFinger { get => _canSelectMissingFinger; private set => _canSelectMissingFinger = value; }
 
 	protected override void Awake ( ) {
 		base.Awake( );
@@ -198,14 +204,11 @@ public class GameManager : Singleton<GameManager> {
 	/// </summary>
 	/// <returns></returns>
 	private IEnumerator HandleCutFingerState ( ) {
-		// Enable the selection of fingers
-		EnableFingerSelection(anyFinger: true);
-
 		// Wait until the active person selects a finger
+		EnableFingerSelection(anyFinger: true);
 		yield return new WaitUntil(( ) => selectedFingers.Count == 1);
 
 		// Cut off the finger that is selected
-		/// TODO: Add finger cutting animation
 		selectedFingers[0].Cut( );
 
 		DisableFingerSelection(clearSelectedFingers: true);
@@ -220,13 +223,44 @@ public class GameManager : Singleton<GameManager> {
 	/// </summary>
 	/// <returns></returns>
 	private IEnumerator HandleChooseItemState ( ) {
-		EnableItemSelection( );
-
 		// Wait until the active person selects an item
+		EnableItemSelection( );
 		yield return new WaitUntil(( ) => selectedItems.Count == 1);
 
-		// Use the selected item
-		yield return selectedItems[0].Use( );
+		// Based on the item that was selected, perform that items specific actions
+		switch (selectedItems[0].Name) {
+			case "Bionic Finger":
+				EnableFingerSelection(anyFinger: true);
+
+
+				break;
+			case "Dice Bag":
+				// Overwrite all of the current dice on the board
+				yield return DiceManager.Instance.FillDicePositions(overwriteCurrentDice: true);
+
+				break;
+			case "Hack Saw":
+				// Have the active person select 2 hands
+				// EnableHandSelection(anyHand: true, handCapacity: 2);
+				// yield return new WaitUntil(( ) => selectedHands.Count == 2);
+
+				// Swap the two hands
+
+				break;
+			case "Scissors":
+				// Have the active person select a finger to cut
+				EnableFingerSelection(anyFinger: true);
+				yield return new WaitUntil(( ) => selectedFingers.Count == 1);
+
+				// Partially cut the finger that was selected
+				selectedFingers[0].PartialCut( );
+
+				DisableFingerSelection(clearSelectedFingers: true);
+
+				break;
+			case "Ad Break":
+				break;
+		}
 
 		DisableItemSelection(clearSelectedItems: true);
 
@@ -440,9 +474,10 @@ public class GameManager : Singleton<GameManager> {
 	/// </summary>
 	/// <param name="anyFinger">Whether or not any finger, regardless of active person, can be selected</param>
 	/// <param name="fingerCapacity">Set a new capacity of fingers that can be selected at one time</param>
-	private void EnableFingerSelection (bool anyFinger = false, int fingerCapacity = 1) {
+	private void EnableFingerSelection (bool anyFinger = false, int fingerCapacity = 1, bool missingFinger = false) {
 		CanSelectFingers = true;
 		canSelectAnyFinger = anyFinger;
+		CanSelectMissingFinger = missingFinger;
 
 		// Make sure the size of the selected fingers list is within the inputted capacity
 		while (fingerCapacity < selectedFingers.Count) {

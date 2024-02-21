@@ -2,22 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum FingerState {
+	ATTACHED, PARTIAL_CUT, CUT
+}
+
 public class Finger : MonoBehaviour {
 	[Header("References")]
 	[SerializeField] private Hand _hand;
 	[SerializeField] private BoxCollider mouseClickCollider;
 	[Header("Properties")]
-	[SerializeField] private int _health;
+	[SerializeField] private FingerState _fingerState;
 
-	/// <summary>
-	///		The current health of this finger
-	/// </summary>
-	public int Health {
-		get => _health;
+	public FingerState FingerState {
+		get => _fingerState;
 		set {
-			_health = value;
+			_fingerState = value;
 
-			/// TODO: Set model type based on health value
+			switch (_fingerState) {
+				case FingerState.ATTACHED:
+					break;
+				case FingerState.PARTIAL_CUT:
+					break;
+				case FingerState.CUT:
+					break;
+			}
 		}
 	}
 
@@ -43,6 +51,21 @@ public class Finger : MonoBehaviour {
 	///		Cut this finger off of its hand
 	/// </summary>
 	public void Cut ( ) {
+		// Cut the finger from the hand
+		FingerState = FingerState.CUT;
 		Hand.CutFinger(this);
+	}
+
+	/// <summary>
+	///		Partially cut this finger
+	/// </summary>
+	public void PartialCut ( ) {
+		// If the finger is fully attached, partial cut the finger
+		// If the finger is already partially cut, fully cut off the finger
+		if (FingerState == FingerState.ATTACHED) {
+			FingerState = FingerState.PARTIAL_CUT;
+		} else if (FingerState == FingerState.PARTIAL_CUT) {
+			Cut( );
+		}
 	}
 }
