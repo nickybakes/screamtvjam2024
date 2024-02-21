@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public enum GameState {
-	CHOOSE_DIE, CHOOSE_ITEM, ROLL_DIE, CUT_FINGER, END_TURN, GAME_OVER, GAME_WIN
+	CHOOSE_DIE, CHOOSE_ITEM, ROLL_DIE, CUT_FINGER, END_TURN, GAME_OVER, GAME_WIN, AUDIENCE_POLL
 }
 
 public class GameManager : Singleton<GameManager> {
@@ -15,6 +15,7 @@ public class GameManager : Singleton<GameManager> {
 	[SerializeField] private Person player;
 	[SerializeField] private Person opponent;
 	[Header("Properties")]
+	[SerializeField] private int audiencePollTurnCount;
 	[SerializeField] private GameState _gameState;
 	[SerializeField] private Person activePerson;
 	[SerializeField] private List<Die> selectedDice;
@@ -28,6 +29,8 @@ public class GameManager : Singleton<GameManager> {
 	[SerializeField] private bool _canSelectHands;
 	[SerializeField] private bool canSelectAnyFinger;
 	[SerializeField] private bool canSelectAnyHand;
+
+	private int audiencePollTurnCounter;
 
 	/// <summary>
 	///		The current state of the game
@@ -103,7 +106,7 @@ public class GameManager : Singleton<GameManager> {
 	private void Start ( ) {
 		// Have the player go first
 		activePerson = opponent;
-
+		audiencePollTurnCounter = -1;
 		GameState = GameState.END_TURN;
 	}
 
@@ -114,13 +117,22 @@ public class GameManager : Singleton<GameManager> {
 	/// </summary>
 	/// <returns></returns>
 	private IEnumerator HandleEndTurnState ( ) {
+		// Check to see if an audience poll needs to occur
+		audiencePollTurnCounter++;
+		if (audiencePollTurnCounter == audiencePollTurnCount) {
+			audiencePollTurnCounter = 0;
+
+			// Update the chat poll UI
+			ScreenManager.Instance.ScreenState = ScreenState.POLL;
+			yield return new WaitUntil(( ) => ScreenManager.Instance.ScreenState == ScreenState.CHAT);
+		}
+
 		// Fill up table with new items and dice
 		yield return DiceManager.Instance.FillEmptyDicePositions( );
 		yield return ItemManager.Instance.FillEmptyItemPositions( );
 
 		// Switch the player who is the active person
 		activePerson = (activePerson == player ? opponent : player);
-
 		GameState = GameState.CHOOSE_DIE;
 
 		yield return null;

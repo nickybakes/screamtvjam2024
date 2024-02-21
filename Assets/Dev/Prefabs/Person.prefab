@@ -49,6 +49,7 @@ MonoBehaviour:
   hands:
   - {fileID: 3056701489707413019}
   - {fileID: 6251099757961588652}
+  _audienceRating: 5
 --- !u!1001 &4161353761393650104
 PrefabInstance:
   m_ObjectHideFlags: 0
