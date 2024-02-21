@@ -5,6 +5,8 @@ using UnityEngine;
 public class Person : MonoBehaviour {
 	[Header("References")]
 	[SerializeField] private Hand[ ] hands;
+	[Header("Properties")]
+	[SerializeField] private float audienceRating;
 
 	/// <summary>
 	///		The total finger count of this person

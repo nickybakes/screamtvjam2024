@@ -6,7 +6,7 @@ using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ScreenManager : MonoBehaviour {
+public class ScreenManager : Singleton<ScreenManager> {
 	[Header("References")]
 	[SerializeField] private GameObject chatMessagePrefab;
 	[SerializeField] private RectTransform chatMessageParent;
@@ -19,7 +19,9 @@ public class ScreenManager : MonoBehaviour {
 
 	private float chatTimer;
 
-	private void Awake ( ) {
+	protected override void Awake ( ) {
+		base.Awake( );
+
 		usernameList = new List<string>( ) { "frank", "nick", "hannah" };
 		messageList = new List<string>( ) { "this is a pretty long message, should probably wrap a couple of times", "wow!", "this chat feature is so cool!!!!!" };
 	}
