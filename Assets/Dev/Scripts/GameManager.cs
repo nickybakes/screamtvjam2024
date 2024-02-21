@@ -128,7 +128,7 @@ public class GameManager : Singleton<GameManager> {
 		}
 
 		// Fill up table with new items and dice
-		yield return DiceManager.Instance.FillEmptyDicePositions( );
+		yield return DiceManager.Instance.FillDicePositions( );
 		yield return ItemManager.Instance.FillEmptyItemPositions( );
 
 		// Switch the player who is the active person

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class DiceBag : Item {
 	public override IEnumerator Use ( ) {
-		yield return null;
+		// Overwrite all of the current dice on the board
+		yield return DiceManager.Instance.FillDicePositions(overwriteCurrentDice: true);
 	}
 }

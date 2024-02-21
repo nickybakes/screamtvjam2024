@@ -42,6 +42,12 @@ public class DiceManager : Singleton<DiceManager> {
 	/// </summary>
 	/// <param name="dieIndex">The index to place a new die at</param>
 	public IEnumerator PlaceRandomDieAt (int dieIndex) {
+		// If there is already a die at the specified index, destroy it so a new one can be spawned
+		if (currentDice[dieIndex] != null) {
+			Destroy(currentDice[dieIndex].gameObject);
+			currentDice[dieIndex] = null;
+		}
+
 		// Spawn the die prefab in the scene at the corresponding die position
 		Die randomDie = Instantiate(dicePrefab, dicePositions[dieIndex]).GetComponent<Die>( );
 
@@ -80,11 +86,11 @@ public class DiceManager : Singleton<DiceManager> {
 	///		Fill all of the empty dice positions on the table with a new die
 	/// </summary>
 	/// <returns></returns>
-	public IEnumerator FillEmptyDicePositions ( ) {
+	public IEnumerator FillDicePositions (bool overwriteCurrentDice = false) {
 		// Loop through the entire current dice list
 		for (int i = 0; i < currentDice.Length; i++) {
 			// If there is a die that has not been set yet, place a new die
-			if (currentDice[i] == null) {
+			if (overwriteCurrentDice || currentDice[i] == null) {
 				yield return PlaceRandomDieAt(i);
 			}
 		}
