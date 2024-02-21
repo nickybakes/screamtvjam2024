@@ -167,8 +167,10 @@ public class GameManager : Singleton<GameManager> {
 			yield return ItemManager.Instance.SwapItems(selectedItems[0], selectedItems[1]);
 		}
 
-		// Roll the die to get a random value
-		int dieValue = DiceManager.Instance.RollDie(selectedDice[0]);
+		// Roll the inputted die and get a die value
+		yield return DiceManager.Instance.RollDie(selectedDice[0]);
+		int dieValue = selectedDice[0].TopFaceValue;
+		Debug.Log($"Rolled a {dieValue}");
 
 		// Get the finger at the rolled dice value on the selected hand
 		// Need to subtract 1 from the die value to turn it into an index

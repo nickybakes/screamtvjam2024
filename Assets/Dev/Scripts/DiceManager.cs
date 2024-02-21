@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 
 public class DiceManager : Singleton<DiceManager> {
 	[Header("References")]
-	[SerializeField] private List<GameObject> dicePrefabs;
+	[SerializeField] private GameObject dicePrefab;
 	[SerializeField] private List<Transform> dicePositions;
 	[Header("Properties")]
 	[SerializeField] private float diceLineLength;
@@ -42,12 +42,8 @@ public class DiceManager : Singleton<DiceManager> {
 	/// </summary>
 	/// <param name="dieIndex">The index to place a new die at</param>
 	public IEnumerator PlaceRandomDieAt (int dieIndex) {
-		// Get a random die prefab
-		GameObject randomDiePrefab = dicePrefabs[Random.Range(0, dicePrefabs.Count)];
-		Transform diePosition = dicePositions[dieIndex];
-
 		// Spawn the die prefab in the scene at the corresponding die position
-		Die randomDie = Instantiate(randomDiePrefab, diePosition).GetComponent<Die>( );
+		Die randomDie = Instantiate(dicePrefab, dicePositions[dieIndex]).GetComponent<Die>( );
 
 		currentDice[dieIndex] = randomDie;
 		Debug.Log($"Generating random die: {randomDie}");
@@ -69,18 +65,15 @@ public class DiceManager : Singleton<DiceManager> {
 	/// </summary>
 	/// <param name="die">The die to roll</param>
 	/// <returns>The integer value that is the result of rolling the die</returns>
-	public int RollDie (Die die) {
+	public IEnumerator RollDie (Die die) {
 		// Roll the inputted die and get a die value
-		int dieValue = die.Roll( );
-
-		// Get the index of the die in the current dice list
-		int dieIndex = Array.IndexOf(currentDice, die);
+		yield return die.Roll( );
 
 		// Remove the die from the active dice
-		currentDice[dieIndex] = null;
+		currentDice[Array.IndexOf(currentDice, die)] = null;
 		Destroy(die.gameObject);
 
-		return dieValue;
+		yield return null;
 	}
 
 	/// <summary>

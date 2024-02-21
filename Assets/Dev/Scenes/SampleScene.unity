@@ -1255,7 +1255,7 @@ BoxCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
+  m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
@@ -1727,10 +1727,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9423f6b35562914c8ec85e6b83edf27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dicePrefabs:
-  - {fileID: 2737848490664105946, guid: 5d17f16405a3d55448cf2aaf384e7c97, type: 3}
-  - {fileID: 7724718203437242704, guid: 648114caa62befc4db6794baa802f0d8, type: 3}
-  - {fileID: 511914425257045206, guid: 7fc12d69e7cf2c745a452e48b999ef30, type: 3}
+  dicePrefab: {fileID: 4306621114899171191, guid: 4419994e0ed36dc4d8d55852a0879075,
+    type: 3}
   dicePositions:
   - {fileID: 1855404850}
   - {fileID: 1487461575}
@@ -2121,6 +2119,7 @@ MonoBehaviour:
   messageList: []
   maxChatTimer: 1.25
   maxViewerTimer: 2
+  _playerAudienceRating: 0
 --- !u!224 &654564273
 RectTransform:
   m_ObjectHideFlags: 0
