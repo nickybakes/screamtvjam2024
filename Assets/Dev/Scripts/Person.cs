@@ -41,4 +41,22 @@ public class Person : MonoBehaviour {
 
 		hands[handIndex].CutFingerAt(fingerIndex);
 	}
+
+	/// <summary>
+	///		Get a random hand on this person
+	/// </summary>
+	/// <returns>A reference to the randomly selected hand</returns>
+	public Hand GetRandomHand ( ) {
+		return hands[Random.Range(0, 2)];
+	}
+
+	/// <summary>
+	///		Get a random unqiue list of fingers from this hand
+	/// </summary>
+	/// <param name="fingerCount">The number of random fingers to get</param>
+	/// <param name="attached">Whether or not the random fingers should be attached or not</param>
+	/// <returns>A list of random fingers from the fingers on a random hand</returns>
+	public Finger[ ] GetRandomFingers (int fingerCount, bool attached = true) {
+		return GetRandomHand( ).GetRandomFingers(fingerCount, attached: attached);
+	}
 }

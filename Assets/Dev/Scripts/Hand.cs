@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Rendering.UI;
 using UnityEngine.XR;
@@ -65,7 +66,26 @@ public class Hand : MonoBehaviour {
 
 		Finger finger = fingers[fingerIndex];
 		fingers[fingerIndex] = null;
-
 		Destroy(finger.gameObject);
+	}
+
+	/// <summary>
+	///		Get a random unqiue list of fingers from this hand
+	/// </summary>
+	/// <param name="fingerCount">The number of random fingers to get</param>
+	/// <param name="attached">Whether or not the random fingers should be attached or not</param>
+	/// <returns>A list of random fingers from the fingers on this hand</returns>
+	public Finger[ ] GetRandomFingers (int fingerCount, bool attached = true) {
+		// A list of fingers that will be randomly selected from
+		List<Finger> fingerList = new List<Finger>( );
+
+		// Depending on the value of the attached variable, populate the finger list with that type of finger (either missing or attached)
+		for (int i = 0; i < fingers.Length; i++) {
+			if ((attached && fingers[i] != null) || (!attached && fingers[i] == null)) {
+				fingerList.Add(fingers[i]);
+			}
+		}
+
+		return Utils.GetRandomUniqueArrayItems(fingerList.ToArray( ), fingerCount);
 	}
 }

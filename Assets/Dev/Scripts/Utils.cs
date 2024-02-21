@@ -55,4 +55,40 @@ public static class Utils {
 
 		return points;
 	}
+
+	/// <summary>
+	///		Get a list of random unqiue items from an array
+	/// </summary>
+	/// <typeparam name="T">The type of list to put in and return from this function</typeparam>
+	/// <param name="array">The array to get the random items from</param>
+	/// <param name="count">The number of random items to return</param>
+	/// <returns>A list of random items from the input array that are all different. If the inputted count is greater than the length of the array, the entire starting array will be returned with no extra values.</returns>
+	public static T[ ] GetRandomUniqueArrayItems<T> (T[ ] array, int count) {
+		// If the item count is equal or greater than the array length, just return the entire array
+		if (count >= array.Length) {
+			return array;
+		}
+
+		// Create lists to store available indices and the randomly selected items
+		List<int> availableIndices = new List<int>( );
+		T[ ] randomItems = new T[count];
+
+		// Populate the indices array with every index in the array
+		for (int i = 0; i < array.Length; i++) {
+			availableIndices.Add(i);
+		}
+
+		// Get random array items without having the same indices
+		for (int i = 0; i < count; i++) {
+			// Get a random available index
+			int randomIndex = Random.Range(0, availableIndices.Count);
+			int randomIndexValue = availableIndices[randomIndex];
+
+			// Add the item at the random index to the random array
+			randomItems[i] = array[randomIndexValue];
+			availableIndices.RemoveAt(randomIndex);
+		}
+
+		return randomItems;
+	}
 }

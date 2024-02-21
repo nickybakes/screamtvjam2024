@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -52,6 +53,15 @@ public class DiceManager : Singleton<DiceManager> {
 		Debug.Log($"Generating random die: {randomDie}");
 
 		yield return null;
+	}
+
+	/// <summary>
+	///		Get a list of random dice from the current dice list
+	/// </summary>
+	/// <param name="diceCount">The number of random dice to get</param>
+	/// <returns>A list of randomly selected dice from the current dice list. No two dice will be the same</returns>
+	public Die[ ] GetRandomDice (int diceCount) {
+		return Utils.GetRandomUniqueArrayItems(currentDice, diceCount);
 	}
 
 	/// <summary>

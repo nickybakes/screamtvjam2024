@@ -1,12 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.ShaderKeywordFilter;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public enum GameState {
-	CHOOSE_DIE, CHOOSE_ITEM, ROLL_DIE, CUT_FINGER, END_TURN,
+	CHOOSE_DIE, CHOOSE_ITEM, ROLL_DIE, CUT_FINGER, END_TURN, GAME_OVER, GAME_WIN
 }
 
 public class GameManager : Singleton<GameManager> {
@@ -44,15 +45,27 @@ public class GameManager : Singleton<GameManager> {
 					break;
 				case GameState.CHOOSE_DIE:
 					StartCoroutine(HandleChooseDieState( ));
+
+					if (activePerson == opponent) {
+						StartCoroutine(HandleOpponentChooseDieState( ));
+					}
 					break;
 				case GameState.ROLL_DIE:
 					StartCoroutine(HandleRollDieState( ));
 					break;
 				case GameState.CUT_FINGER:
 					StartCoroutine(HandleCutFingerState( ));
+
+					if (activePerson == opponent) {
+						StartCoroutine(HandleOpponentCutFingerState( ));
+					}
 					break;
 				case GameState.CHOOSE_ITEM:
 					StartCoroutine(HandleChooseItemState( ));
+
+					if (activePerson == opponent) {
+						StartCoroutine(HandleOpponentChooseItemState( ));
+					}
 					break;
 			}
 		}
@@ -89,7 +102,7 @@ public class GameManager : Singleton<GameManager> {
 
 	private void Start ( ) {
 		// Have the player go first
-		activePerson = player;
+		activePerson = opponent;
 
 		GameState = GameState.END_TURN;
 	}
@@ -106,7 +119,7 @@ public class GameManager : Singleton<GameManager> {
 		yield return ItemManager.Instance.FillEmptyItemPositions( );
 
 		// Switch the player who is the active person
-		// activePerson = (activePerson == player ? opponent : player);
+		activePerson = (activePerson == player ? opponent : player);
 
 		GameState = GameState.CHOOSE_DIE;
 
@@ -201,6 +214,8 @@ public class GameManager : Singleton<GameManager> {
 		// Use the selected item
 		yield return selectedItems[0].Use( );
 
+		DisableItemSelection(clearSelectedItems: true);
+
 		GameState = GameState.END_TURN;
 
 		yield return null;
@@ -210,10 +225,60 @@ public class GameManager : Singleton<GameManager> {
 
 	#region Opponent Handler Functions
 
+	/// <summary>
+	///		Handle the opponent's actions during the choose die game state
+	/// </summary>
+	/// <returns></returns>
 	private IEnumerator HandleOpponentChooseDieState ( ) {
-		yield return new WaitForSeconds(Random.Range(1f, 2f));
+		// Wait a couple of seconds to make the opponent seem more human
+		yield return new WaitForSeconds(Random.Range(1f, 2.5f));
+
+		// Select random dice and hand
+		SelectDie(DiceManager.Instance.GetRandomDice(1)[0]);
+		SelectHand(opponent.GetRandomHand( ));
+
+		// Have a 50% chance to swap two items around
+		if (Random.Range(0f, 1f) < 1f) {
+			Item[ ] randomItems = ItemManager.Instance.GetRandomItems(2);
+			SelectItem(randomItems[0]);
+			SelectItem(randomItems[1]);
+		}
+
+		// Wait a couple of seconds to make the opponent seem more human
+		yield return new WaitForSeconds(Random.Range(0.5f, 1f));
 
 		GameState = GameState.ROLL_DIE;
+
+		yield return null;
+	}
+
+	/// <summary>
+	///		Handle the opponent's actions during the cut finger game state
+	/// </summary>
+	/// <returns></returns>
+	private IEnumerator HandleOpponentCutFingerState ( ) {
+		// Wait a couple of seconds to make the opponent seem more human
+		yield return new WaitForSeconds(Random.Range(1f, 2.5f));
+
+		// Give the opponent an 85% chance to select the player when chopping off a finger, otherwise chop off one of their own
+		Person randomPerson = (Random.Range(0f, 1f) < 0.85f ? player : opponent);
+
+		// Select a random attached finger on whatever person was chosen
+		SelectFinger(randomPerson.GetRandomFingers(1)[0]);
+
+		yield return null;
+	}
+
+	/// <summary>
+	///		Handle the opponent's actions during the choose item game state
+	/// </summary>
+	/// <returns></returns>
+	private IEnumerator HandleOpponentChooseItemState ( ) {
+		// Wait a couple of seconds to make the opponent seem more human
+		yield return new WaitForSeconds(Random.Range(1f, 2.5f));
+
+		// Select a random item
+		SelectItem(ItemManager.Instance.GetRandomItems(1)[0]);
 
 		yield return null;
 	}
@@ -420,6 +485,7 @@ public class GameManager : Singleton<GameManager> {
 	/// <param name="clearSelectedFingers">Whether or not to clear the currently selected fingers</param>
 	private void DisableFingerSelection (bool clearSelectedFingers = false) {
 		CanSelectFingers = false;
+		canSelectAnyFinger = false;
 
 		if (clearSelectedFingers) {
 			selectedFingers.Clear( );
@@ -432,6 +498,7 @@ public class GameManager : Singleton<GameManager> {
 	/// <param name="clearSelectedHands">Whether or not to clear the currently selected hands</param>
 	private void DisableHandSelection (bool clearSelectedHands = false) {
 		CanSelectHands = false;
+		canSelectAnyHand = false;
 
 		if (clearSelectedHands) {
 			selectedHands.Clear( );

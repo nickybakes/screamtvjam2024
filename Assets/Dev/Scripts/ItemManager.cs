@@ -55,6 +55,15 @@ public class ItemManager : Singleton<ItemManager> {
 	}
 
 	/// <summary>
+	///		Get a list of random items from the current items list
+	/// </summary>
+	/// <param name="itemCount">The number of random items to get</param>
+	/// <returns>A list of randomly selected items from the current items list. No two items will be the same</returns>
+	public Item[ ] GetRandomItems (int itemCount) {
+		return Utils.GetRandomUniqueArrayItems(currentItems, itemCount);
+	}
+
+	/// <summary>
 	///		Switch the indices of two items
 	/// </summary>
 	/// <param name="item1">The first item to switch</param>
