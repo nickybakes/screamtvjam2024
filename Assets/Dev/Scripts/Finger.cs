@@ -55,11 +55,11 @@ public class Finger : MonoBehaviour {
 	///		Partially cut this finger
 	/// </summary>
 	public void PartialCut ( ) {
-		// If the finger is fully attached, partial cut the finger
-		// If the finger is already partially cut, fully cut off the finger
 		if (FingerState == FingerState.ATTACHED) {
+			// If the finger is fully attached, partial cut the finger
 			FingerState = FingerState.PARTIAL_CUT;
 		} else if (FingerState == FingerState.PARTIAL_CUT) {
+			// If the finger is already partially cut, fully cut off the finger
 			Cut( );
 		}
 	}

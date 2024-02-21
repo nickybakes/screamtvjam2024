@@ -118,5 +118,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 898739f84710f6e438e5100feba1e93c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mouseClickCollider: {fileID: 4304331542903373706}
   _name: Default Item Name
+  _description: Default Item Description

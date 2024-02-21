@@ -33,14 +33,24 @@ public class Die : MonoBehaviour {
 
 		// Make sure the sum of all the faces is above a minimum value
 		while (faceSum < minFaceValueSum) {
+			// Make sure the value of the dice does not go over 6
+			int index = Random.Range(0, 6);
+			if (faceValues[index] == 6) {
+				continue;
+			}
+
 			// Pick a random face and add 1 to its value
 			faceValues[Random.Range(0, 6)]++;
 			faceSum++;
 		}
 
-		/// TODO: Set face materials
-		/// Face materials need to match a specific order of directions in order to accuratly get the top value of the die when it is rolled
-		/// Faces will be applied in the order: up, forward, right, -forward (back), -right (left), -up (down)
+		// Set face materials to match the values
+		// Material 1: up
+		// Material 2: forward
+		// Material 3: -right (left)
+		// Material 4: right
+		// Material 5: -forward (rear)
+		// Material 6: -up (bottom)
 	}
 
 	private void OnMouseDown ( ) {
@@ -84,21 +94,21 @@ public class Die : MonoBehaviour {
 			TopFaceValue = faceValues[1];
 		}
 
+		// Check left face
+		if (-transform.right.y > maxYValue) {
+			maxYValue = -transform.right.y;
+			TopFaceValue = faceValues[2];
+		}
+
 		// Check right face
 		if (transform.right.y > maxYValue) {
 			maxYValue = transform.right.y;
-			TopFaceValue = faceValues[2];
+			TopFaceValue = faceValues[3];
 		}
 
 		// Check rear face
 		if (-transform.forward.y > maxYValue) {
 			maxYValue = -transform.forward.y;
-			TopFaceValue = faceValues[3];
-		}
-
-		// Check left face
-		if (-transform.right.y > maxYValue) {
-			maxYValue = -transform.right.y;
 			TopFaceValue = faceValues[4];
 		}
 

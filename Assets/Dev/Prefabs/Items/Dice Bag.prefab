@@ -18,6 +18,11 @@ PrefabInstance:
       propertyPath: _name
       value: Dice Bag
       objectReference: {fileID: 0}
+    - target: {fileID: 2317023829450034915, guid: 03374007884a1a240b741eda1ac8da74,
+        type: 3}
+      propertyPath: _description
+      value: Replace all dice on the table with new ones
+      objectReference: {fileID: 0}
     - target: {fileID: 8198446265344732993, guid: 03374007884a1a240b741eda1ac8da74,
         type: 3}
       propertyPath: m_LocalPosition.x

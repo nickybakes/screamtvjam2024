@@ -226,12 +226,13 @@ public class GameManager : Singleton<GameManager> {
 		// Wait until the active person selects an item
 		EnableItemSelection( );
 		yield return new WaitUntil(( ) => selectedItems.Count == 1);
+		DisableItemSelection( );
 
 		// Based on the item that was selected, perform that items specific actions
 		switch (selectedItems[0].Name) {
 			case "Bionic Finger":
-				EnableFingerSelection(anyFinger: true);
-
+				// Enable the selection of missing fingers
+				// EnableFingerSelection(anyFinger: true, missingFinger: true);
 
 				break;
 			case "Dice Bag":
@@ -259,6 +260,9 @@ public class GameManager : Singleton<GameManager> {
 
 				break;
 			case "Ad Break":
+				// Increase the active person's rating
+				ScreenManager.Instance.PlayerAudienceRating += (activePerson == player ? 2 : -2);
+
 				break;
 		}
 

@@ -18,6 +18,12 @@ PrefabInstance:
       propertyPath: _name
       value: Ad Break
       objectReference: {fileID: 0}
+    - target: {fileID: 2317023829450034915, guid: 03374007884a1a240b741eda1ac8da74,
+        type: 3}
+      propertyPath: _description
+      value: Decrease your opponent's audience rating by showing their viewers an
+        ad
+      objectReference: {fileID: 0}
     - target: {fileID: 8198446265344732993, guid: 03374007884a1a240b741eda1ac8da74,
         type: 3}
       propertyPath: m_LocalPosition.x
