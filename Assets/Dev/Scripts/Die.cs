@@ -60,6 +60,7 @@ public class Die : MonoBehaviour {
 	}
 
 	private void OnMouseExit ( ) {
+
 	}
 
 	private void OnMouseDown ( ) {

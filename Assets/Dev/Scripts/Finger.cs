@@ -9,6 +9,9 @@ public enum FingerState {
 public class Finger : MonoBehaviour {
 	[Header("References")]
 	[SerializeField] private Hand _hand;
+	[SerializeField] private GameObject attachedFingerModel;
+	[SerializeField] private GameObject partialCutFingerModel;
+	[SerializeField] private GameObject cutFingerModel;
 	[Header("Properties")]
 	[SerializeField] private FingerState _fingerState;
 
@@ -17,14 +20,9 @@ public class Finger : MonoBehaviour {
 		set {
 			_fingerState = value;
 
-			switch (_fingerState) {
-				case FingerState.ATTACHED:
-					break;
-				case FingerState.PARTIAL_CUT:
-					break;
-				case FingerState.CUT:
-					break;
-			}
+			attachedFingerModel.SetActive(FingerState == FingerState.ATTACHED);
+			partialCutFingerModel.SetActive(FingerState == FingerState.PARTIAL_CUT);
+			cutFingerModel.SetActive(FingerState == FingerState.CUT);
 		}
 	}
 
@@ -37,6 +35,14 @@ public class Finger : MonoBehaviour {
 	///		The person that this finger belongs to
 	/// </summary>
 	public Person Person => Hand.Person;
+
+	private void OnMouseEnter ( ) {
+		
+	}
+
+	private void OnMouseExit ( ) {
+		
+	}
 
 	private void OnMouseDown ( ) {
 		// If it is not the players turn, return from this function
@@ -51,7 +57,6 @@ public class Finger : MonoBehaviour {
 	///		Cut this finger off of its hand
 	/// </summary>
 	public void Cut ( ) {
-		// Cut the finger from the hand
 		FingerState = FingerState.CUT;
 	}
 

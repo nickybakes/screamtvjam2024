@@ -52,14 +52,6 @@ public class Hand : MonoBehaviour {
 	}
 
 	/// <summary>
-	///		Cut off a finger from this hand without knowing a specific index
-	/// </summary>
-	/// <param name="finger">The finger to cut</param>
-	public void CutFinger (Finger finger) {
-		finger.Cut( );
-	}
-
-	/// <summary>
 	///		Cut off a finger from this hand
 	/// </summary>
 	/// <param name="fingerIndex">The index of the finger to cut</param>
@@ -82,9 +74,9 @@ public class Hand : MonoBehaviour {
 		// A list of fingers that will be randomly selected from
 		List<Finger> fingerList = new List<Finger>( );
 
-		// Depending on the value of the attached variable, populate the finger list with that type of finger (either missing or attached)
+		// Depending on the value of the attached variable, populate the finger list with that type of finger (either cut or attached)
 		for (int i = 0; i < fingers.Length; i++) {
-			if ((attached && fingers[i] != null) || (!attached && fingers[i] == null)) {
+			if ((attached && fingers[i].FingerState != FingerState.CUT) || (!attached && fingers[i].FingerState == FingerState.CUT)) {
 				fingerList.Add(fingers[i]);
 			}
 		}

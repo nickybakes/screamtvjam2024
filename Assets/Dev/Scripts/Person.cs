@@ -57,6 +57,12 @@ public class Person : MonoBehaviour {
 	/// <param name="attached">Whether or not the random fingers should be attached or not</param>
 	/// <returns>A list of random fingers from the fingers on a random hand</returns>
 	public Finger[ ] GetRandomFingers (int fingerCount, bool attached = true) {
-		return GetRandomHand( ).GetRandomFingers(fingerCount, attached: attached);
+		List<Finger> fingerList = new List<Finger>( );
+
+		// Add all fingers from the hands to the finger list
+		fingerList.AddRange(hands[0].GetRandomFingers(5, attached: attached));
+		fingerList.AddRange(hands[1].GetRandomFingers(5, attached: attached));
+
+		return Utils.GetRandomUniqueArrayItems(fingerList.ToArray( ), fingerCount);
 	}
 }
