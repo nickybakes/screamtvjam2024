@@ -2,11 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.Rendering.UI;
-using UnityEngine.XR;
 
 public class Hand : MonoBehaviour {
 	[Header("References")]

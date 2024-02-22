@@ -67,7 +67,6 @@ public class ScreenManager : Singleton<ScreenManager> {
 	protected override void Awake ( ) {
 		base.Awake( );
 
-		/// TODO: Load usernames and messages from file
 		usernameList = new List<string>( ) { "frank", "nick", "hannah" };
 		messageList = new List<string>( ) { "this is a pretty long message, should probably wrap a couple of times", "wow!", "this chat feature is so cool!!!!!" };
 	}

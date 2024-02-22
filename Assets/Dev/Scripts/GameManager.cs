@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.ShaderKeywordFilter;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -189,13 +188,11 @@ public class GameManager : Singleton<GameManager> {
 		yield return DiceManager.Instance.RollDie(selectedDice[0]);
 		int dieValue = selectedDice[0].TopFaceValue;
 		Debug.Log($"Rolled a {dieValue}");
+		DisableDieSelection(clearSelectedDice: true);
 
 		// Get the finger at the rolled dice value on the selected hand
 		// Need to subtract 1 from the die value to turn it into an index
 		Finger rolledFinger = selectedHands[0].GetFingerAt(dieValue - 1);
-
-		// Reset all references to the selection
-		DisableDieSelection(clearSelectedDice: true);
 
 		// Determine what the active person can do based on the die value
 		// If the rolled finger is not null or the die value is 6, then the active person can chop off a finger
