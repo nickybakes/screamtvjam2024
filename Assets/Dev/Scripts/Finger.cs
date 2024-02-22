@@ -39,6 +39,11 @@ public class Finger : MonoBehaviour {
 	public Person Person => Hand.Person;
 
 	private void OnMouseDown ( ) {
+		// If it is not the players turn, return from this function
+		if (!GameManager.Instance.IsPlayerTurn) {
+			return;
+		}
+
 		GameManager.Instance.SelectFinger(this);
 	}
 

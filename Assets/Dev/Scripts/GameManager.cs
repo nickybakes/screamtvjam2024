@@ -38,6 +38,11 @@ public class GameManager : Singleton<GameManager> {
 	private Coroutine narratorTextCoroutine;
 
 	/// <summary>
+	///		Whether or not it is currently the players turn
+	/// </summary>
+	public bool IsPlayerTurn => activePerson == player;
+
+	/// <summary>
 	///		The current state of the game
 	/// </summary>
 	public GameState GameState {
@@ -54,7 +59,7 @@ public class GameManager : Singleton<GameManager> {
 				case GameState.CHOOSE_DIE:
 					StartCoroutine(HandleChooseDieState( ));
 
-					if (activePerson == opponent) {
+					if (!IsPlayerTurn) {
 						StartCoroutine(HandleOpponentChooseDieState( ));
 					}
 					break;
@@ -64,14 +69,14 @@ public class GameManager : Singleton<GameManager> {
 				case GameState.CUT_FINGER:
 					StartCoroutine(HandleCutFingerState( ));
 
-					if (activePerson == opponent) {
+					if (!IsPlayerTurn) {
 						StartCoroutine(HandleOpponentCutFingerState( ));
 					}
 					break;
 				case GameState.CHOOSE_ITEM:
 					StartCoroutine(HandleChooseItemState( ));
 
-					if (activePerson == opponent) {
+					if (!IsPlayerTurn) {
 						StartCoroutine(HandleOpponentChooseItemState( ));
 					}
 					break;
@@ -142,8 +147,8 @@ public class GameManager : Singleton<GameManager> {
 		yield return ItemManager.Instance.FillEmptyItemPositions( );
 
 		// Switch the player who is the active person
-		activePerson = (activePerson == player ? opponent : player);
-		SetNarratorText(activePerson == player ? "<color=#FF004B><b>Your turn</b></color>" : "Opponent's turn");
+		activePerson = (IsPlayerTurn ? opponent : player);
+		SetNarratorText(IsPlayerTurn ? "<color=#FF004B><b>Your turn</b></color>" : "Opponent's turn");
 		GameState = GameState.CHOOSE_DIE;
 
 		yield return null;
@@ -176,6 +181,8 @@ public class GameManager : Singleton<GameManager> {
 		// If two items were selected, swap their places
 		if (selectedItems.Count == 2) {
 			yield return ItemManager.Instance.SwapItems(selectedItems[0], selectedItems[1]);
+			Debug.Log(selectedItems.Count);
+			DisableItemSelection(clearSelectedItems: true);
 		}
 
 		// Roll the inputted die and get a die value
@@ -189,7 +196,6 @@ public class GameManager : Singleton<GameManager> {
 
 		// Reset all references to the selection
 		DisableDieSelection(clearSelectedDice: true);
-		DisableItemSelection(clearSelectedItems: true);
 
 		// Determine what the active person can do based on the die value
 		// If the rolled finger is not null or the die value is 6, then the active person can chop off a finger
@@ -268,7 +274,7 @@ public class GameManager : Singleton<GameManager> {
 				break;
 			case "Ad Break":
 				// Increase the active person's rating
-				ScreenManager.Instance.PlayerAudienceRating += (activePerson == player ? 2 : -2);
+				ScreenManager.Instance.PlayerAudienceRating += (IsPlayerTurn ? 2 : -2);
 
 				break;
 		}

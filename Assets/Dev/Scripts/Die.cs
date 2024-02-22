@@ -63,6 +63,11 @@ public class Die : MonoBehaviour {
 	}
 
 	private void OnMouseDown ( ) {
+		// If it is not the players turn, return from this function
+		if (!GameManager.Instance.IsPlayerTurn) {
+			return;
+		}
+
 		GameManager.Instance.SelectDie(this);
 	}
 
