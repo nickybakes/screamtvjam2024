@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,7 +26,9 @@ public class ScreenManager : Singleton<ScreenManager> {
 	[Header("Properties")]
 	[SerializeField] private ScreenState _screenState;
 	[SerializeField] private List<string> usernameList;
-	[SerializeField] private List<string> messageList;
+	[SerializeField] private List<string> boredMessageList;
+	[SerializeField] private List<string> excitedMessageList;
+	[SerializeField] private List<string> neutralMessageList;
 	[SerializeField] private float maxChatTimer;
 	[SerializeField] private float maxViewerTimer;
 	[SerializeField] private int _playerAudienceRating;
@@ -67,8 +71,14 @@ public class ScreenManager : Singleton<ScreenManager> {
 	protected override void Awake ( ) {
 		base.Awake( );
 
-		usernameList = new List<string>( ) { "frank", "nick", "hannah" };
-		messageList = new List<string>( ) { "this is a pretty long message, should probably wrap a couple of times", "wow!", "this chat feature is so cool!!!!!" };
+		Debug.Log((Resources.Load("usernames") as TextAsset));
+
+		usernameList = (Resources.Load("usernames") as TextAsset).text.Split("\n").ToList();
+		boredMessageList = (Resources.Load("bored messages") as TextAsset).text.Split("\n").ToList( );
+		excitedMessageList = (Resources.Load("excited messages") as TextAsset).text.Split("\n").ToList( );
+		neutralMessageList = (Resources.Load("neutral messages") as TextAsset).text.Split("\n").ToList( );
+
+		PlayerAudienceRating = 5;
 	}
 
 	private void Start ( ) {
@@ -121,13 +131,20 @@ public class ScreenManager : Singleton<ScreenManager> {
 	/// </summary>
 	private void SpawnChatMessage ( ) {
 		// Get username from the list
-		string username = usernameList[Random.Range(0, usernameList.Count)];
+		string username = usernameList[Random.Range(0, usernameList.Count)].Trim( );
 		if (Random.Range(0f, 1f) < 0.5f) {
 			username += $"{Random.Range(0, 1000)}";
 		}
 
 		// Get message from the list
-		string message = messageList[Random.Range(0, messageList.Count)];
+		string message;
+		if (PlayerAudienceRating < 2) {
+			message = boredMessageList[Random.Range(0, boredMessageList.Count)].Trim( );
+		} else if (PlayerAudienceRating < 8) {
+			message = neutralMessageList[Random.Range(0, neutralMessageList.Count)].Trim( );
+		} else {
+			message = excitedMessageList[Random.Range(0, excitedMessageList.Count)].Trim( );
+		}
 
 		// Create the chat message text
 		TextMeshPro chatMessageText = Instantiate(chatMessagePrefab, chatMessageParent).GetComponent<TextMeshPro>( );

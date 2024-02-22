@@ -216,6 +216,13 @@ public class GameManager : Singleton<GameManager> {
 		DisableHandSelection(clearSelectedHands: true);
 		yield return new WaitUntil(( ) => selectedFingers.Count == 1);
 
+		// Adjust the player rating based on their actions
+		if (selectedFingers[0].Person == activePerson) {
+			ScreenManager.Instance.PlayerAudienceRating += IsPlayerTurn ? 3 : -3;
+		} else {
+			ScreenManager.Instance.PlayerAudienceRating += IsPlayerTurn ? 1 : -1;
+		}
+
 		// Cut off the finger that is selected
 		selectedFingers[0].Cut( );
 
@@ -257,11 +264,22 @@ public class GameManager : Singleton<GameManager> {
 
 				// Swap the two hands
 
+				ScreenManager.Instance.PlayerAudienceRating += IsPlayerTurn ? 5 : -5;
+
+				if (selectedFingers[0].Person == activePerson) {
+				} else {
+					ScreenManager.Instance.PlayerAudienceRating += IsPlayerTurn ? 1 : -1;
+				}
+
 				break;
 			case "Scissors":
 				// Have the active person select a finger to cut
 				EnableFingerSelection(anyFinger: true);
 				yield return new WaitUntil(( ) => selectedFingers.Count == 1);
+
+				if (selectedFingers[0].Person == activePerson) {
+					ScreenManager.Instance.PlayerAudienceRating += IsPlayerTurn ? 2 : -2;
+				}
 
 				// Partially cut the finger that was selected
 				selectedFingers[0].PartialCut( );
@@ -271,7 +289,7 @@ public class GameManager : Singleton<GameManager> {
 				break;
 			case "Ad Break":
 				// Increase the active person's rating
-				ScreenManager.Instance.PlayerAudienceRating += (IsPlayerTurn ? 2 : -2);
+				ScreenManager.Instance.PlayerAudienceRating += (IsPlayerTurn ? 4 : -4);
 
 				break;
 		}
