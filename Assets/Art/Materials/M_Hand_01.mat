@@ -127,8 +127,8 @@ Material:
     - _Surface: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
-    - _meshNoiseEffectiveness: 0.0189
-    - _meshNoiseUVScale: 0.03
+    - _meshNoiseEffectiveness: 0.16
+    - _meshNoiseUVScale: 0.24
     - _meshScale: 0
     m_Colors:
     - _BaseColor: {r: 0.9528302, g: 0.9528302, b: 0.9528302, a: 1}

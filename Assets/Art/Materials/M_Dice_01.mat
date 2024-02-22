@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_Hand_02
+  m_Name: M_Dice_01
   m_Shader: {fileID: -6465566751694194690, guid: a5892faac3e848041a8badf41d291173,
     type: 3}
   m_Parent: {fileID: 0}
@@ -77,7 +77,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _albedo:
-        m_Texture: {fileID: 2800000, guid: fceccca6225583445b8e307db0704da1, type: 3}
+        m_Texture: {fileID: 2800000, guid: 11c24a8be4f7f034eae304768e83baf7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -127,15 +127,15 @@ Material:
     - _Surface: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
-    - _meshNoiseEffectiveness: 0.16
-    - _meshNoiseUVScale: 0.24
+    - _meshNoiseEffectiveness: 0.0189
+    - _meshNoiseUVScale: 0.03
     - _meshScale: 0
     m_Colors:
     - _BaseColor: {r: 0.9528302, g: 0.9528302, b: 0.9528302, a: 1}
     - _Color: {r: 0.95283014, g: 0.95283014, b: 0.95283014, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _color: {r: 0.8679245, g: 0.8679245, b: 0.8679245, a: 0}
+    - _color: {r: 0.8113208, g: 0.8113208, b: 0.8113208, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &1554921406578664814
 MonoBehaviour:
