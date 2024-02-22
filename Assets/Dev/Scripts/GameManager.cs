@@ -143,7 +143,7 @@ public class GameManager : Singleton<GameManager> {
 
 		// Switch the player who is the active person
 		activePerson = (activePerson == player ? opponent : player);
-		SetNarratorText(activePerson == player ? "Your turn" : "Opponent's turn");
+		SetNarratorText(activePerson == player ? "<color=#FF004B><b>Your turn</b></color>" : "Opponent's turn");
 		GameState = GameState.CHOOSE_DIE;
 
 		yield return null;

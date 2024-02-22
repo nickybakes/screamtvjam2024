@@ -56,7 +56,7 @@ public class Die : MonoBehaviour {
 	}
 
 	private void OnMouseEnter ( ) {
-		GameManager.Instance.SetNarratorText($"Dice Face Values - {ToString()}");
+		GameManager.Instance.SetNarratorText($"<color=#00FFEE>Dice Face Values</color> - <color=#FFE200><b>{ToString()}</b></color>");
 	}
 
 	private void OnMouseExit ( ) {

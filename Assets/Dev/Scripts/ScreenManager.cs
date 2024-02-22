@@ -81,23 +81,26 @@ public class ScreenManager : Singleton<ScreenManager> {
 	private void Update ( ) {
 		// If the chat timer is less than or equal to 0, spawn a chat
 		if (chatTimer <= 0) {
-			SpawnChatMessage( );
+			// Only spawn new chat messages if the chat is open
+			if (ScreenState == ScreenState.CHAT) {
+				SpawnChatMessage( );
+
+				float chatHeight = 0f;
+				// Loop through all of the chat messages and remove the ones that go off the top of the screen
+				for (int i = chatMessageParent.childCount - 1; i >= 0; i--) {
+					// If the chat messages have not exceeded the bounds of the screen, increment the chat height counter until they do
+					chatHeight += LayoutUtility.GetPreferredHeight(chatMessageParent.GetChild(i).GetComponent<RectTransform>( ));
+
+					// If the chat height exceeds the bounds of the screen, then destroy the chat message object that overflows
+					// Subtracting 2 because of the horizontal layout group element padding
+					if (chatHeight > chatMessageParent.rect.height) {
+						Destroy(chatMessageParent.GetChild(i).gameObject);
+					}
+				}
+			}
 
 			// Set a random chat time for the next chat to appear
 			chatTimer = Random.Range(0f, maxChatTimer);
-
-			float chatHeight = 0f;
-			// Loop through all of the chat messages and remove the ones that go off the top of the screen
-			for (int i = chatMessageParent.childCount - 1; i >= 0; i--) {
-				// If the chat messages have not exceeded the bounds of the screen, increment the chat height counter until they do
-				chatHeight += LayoutUtility.GetPreferredHeight(chatMessageParent.GetChild(i).GetComponent<RectTransform>( ));
-
-				// If the chat height exceeds the bounds of the screen, then destroy the chat message object that overflows
-				// Subtracting 2 because of the horizontal layout group element padding
-				if (chatHeight > chatMessageParent.rect.height) {
-					Destroy(chatMessageParent.GetChild(i).gameObject);
-				}
-			}
 		}
 
 		// If the viewer timer is 0, update the viewer counter on the screen
@@ -109,8 +112,8 @@ public class ScreenManager : Singleton<ScreenManager> {
 		}
 
 		// Update the values of the timer variables with how much time has passed since the last update call
-		chatTimer -= Time.deltaTime;
 		viewerTimer -= Time.deltaTime;
+		chatTimer -= Time.deltaTime;
 	}
 
 	/// <summary>

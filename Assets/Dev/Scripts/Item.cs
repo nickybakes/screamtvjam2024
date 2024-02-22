@@ -18,7 +18,7 @@ public class Item : MonoBehaviour {
 	public string Description => _description;
 
 	private void OnMouseEnter ( ) {
-		GameManager.Instance.SetNarratorText($"{Name} - {Description}");
+		GameManager.Instance.SetNarratorText($"<color=#FFE200><b>{Name}</b></color> - <color=#00FFEE>{Description}</color>");
 	}
 
 	private void OnMouseExit ( ) {
