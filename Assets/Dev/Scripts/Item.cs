@@ -17,6 +17,13 @@ public class Item : MonoBehaviour {
 	/// </summary>
 	public string Description => _description;
 
+	private void OnMouseEnter ( ) {
+		GameManager.Instance.SetNarratorText($"{Name} - {Description}");
+	}
+
+	private void OnMouseExit ( ) {
+	}
+
 	protected void OnMouseDown ( ) {
 		GameManager.Instance.SelectItem(this);
 	}

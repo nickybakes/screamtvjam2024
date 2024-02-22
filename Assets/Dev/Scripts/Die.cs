@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor.Rendering.LookDev;
 using UnityEngine;
 
 public class Die : MonoBehaviour {
 	[Header("References")]
 	[SerializeField] private Material[ ] faceMaterials;
-	[SerializeField] private Rigidbody dieRigidbody;
+	[SerializeField] private new Rigidbody rigidbody;
+	[SerializeField] private AudioSource audioSource;
 	[Header("Properties")]
 	[SerializeField] private int[ ] faceValues;
 	[SerializeField] private int minFaceValueSum;
@@ -53,8 +55,20 @@ public class Die : MonoBehaviour {
 		// Material 6: -up (bottom)
 	}
 
+	private void OnMouseEnter ( ) {
+		GameManager.Instance.SetNarratorText($"Dice Face Values - {ToString()}");
+	}
+
+	private void OnMouseExit ( ) {
+	}
+
 	private void OnMouseDown ( ) {
 		GameManager.Instance.SelectDie(this);
+	}
+
+	private void OnCollisionEnter (Collision collision) {
+		// Play a sound effect when the dice collides with something
+		audioSource.Play( );
 	}
 
 	/// <summary>
@@ -74,11 +88,11 @@ public class Die : MonoBehaviour {
 		Vector3 angularVector = new Vector3(angularX, angularY, angularZ).normalized * maxAngularVelocity;
 
 		// Instantly set the velocities of the die
-		dieRigidbody.velocity = linearVector;
-		dieRigidbody.angularVelocity = angularVector;
+		rigidbody.velocity = linearVector;
+		rigidbody.angularVelocity = angularVector;
 
 		// Wait until the die has landed on the table and is stationary
-		yield return new WaitUntil(( ) => dieRigidbody.angularVelocity.magnitude < 0.01f && dieRigidbody.velocity.magnitude < 0.01f);
+		yield return new WaitUntil(( ) => rigidbody.angularVelocity.magnitude < 0.01f && rigidbody.velocity.magnitude < 0.01f);
 
 		// Get the face that is currently facing upwards
 		float maxYValue = 0f;

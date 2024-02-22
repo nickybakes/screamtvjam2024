@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor.ShaderKeywordFilter;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +15,8 @@ public class GameManager : Singleton<GameManager> {
 	[Header("References")]
 	[SerializeField] private Person player;
 	[SerializeField] private Person opponent;
+	[SerializeField] private TextMeshProUGUI narratorText;
+	[SerializeField] private Image narratorTextBackground;
 	[Header("Properties")]
 	[SerializeField] private int audiencePollTurnCount;
 	[SerializeField] private GameState _gameState;
@@ -32,6 +35,7 @@ public class GameManager : Singleton<GameManager> {
 	[SerializeField] private bool canSelectAnyHand;
 
 	private int audiencePollTurnCounter;
+	private Coroutine narratorTextCoroutine;
 
 	/// <summary>
 	///		The current state of the game
@@ -139,6 +143,7 @@ public class GameManager : Singleton<GameManager> {
 
 		// Switch the player who is the active person
 		activePerson = (activePerson == player ? opponent : player);
+		SetNarratorText(activePerson == player ? "Your turn" : "Opponent's turn");
 		GameState = GameState.CHOOSE_DIE;
 
 		yield return null;
@@ -574,28 +579,63 @@ public class GameManager : Singleton<GameManager> {
 			selectedHands.Count >= handCount
 		);
 	}
+
+	/// <summary>
+	///		Set the narrator text on screen
+	/// </summary>
+	/// <param name="text">The text to display on screen</param>
+	public void SetNarratorText (string text = "") {
+		// If the coroutine is not null, stop it so it can be restarted
+		if (narratorTextCoroutine != null) {
+			StopCoroutine(narratorTextCoroutine);
+			narratorTextCoroutine = null;
+		}
+
+		narratorTextCoroutine = StartCoroutine(NarratorTextProcess(text));
+	}
+
+	/// <summary>
+	///		Animation process for the narration text
+	/// </summary>
+	/// <param name="text">The text to display on screen</param>
+	/// <returns></returns>
+	private IEnumerator NarratorTextProcess (string text = "") {
+		// Only do this loop if the text is not empty
+		if (text.Length > 0) {
+			narratorText.text = text;
+
+			// Reset alpha
+			Color narratorTextColor = narratorText.color;
+			Color narratorTextBackgroundColor = narratorTextBackground.color;
+
+			narratorTextColor.a = 1f;
+			narratorText.color = narratorTextColor;
+			narratorTextBackgroundColor.a = 1f;
+			narratorTextBackground.color = narratorTextBackgroundColor;
+
+			// Have the text stay on screen for a little bit
+			yield return new WaitForSeconds(3f);
+
+			// Slowly decrease the alpha of the text
+			float alpha = 1f;
+			while (alpha > 0f) {
+				// Set the color alpha
+				narratorTextColor.a = alpha;
+				narratorText.color = narratorTextColor;
+				narratorTextBackgroundColor.a = alpha;
+				narratorTextBackground.color = narratorTextBackgroundColor;
+
+				// This fade will take 1 second
+				alpha -= 0.02f;
+				yield return new WaitForSeconds(0.02f);
+			}
+
+			// Make sure alpha is all the way at 0
+			narratorTextColor.a = 0f;
+			narratorTextBackgroundColor.a = 0f;
+			narratorText.text = "";
+		}
+
+		yield return null;
+	}
 }
-
-/*
-
-Game setup:
-- Three dice are placed on the board
-- Five items are placed on the board
-* The audience chooses a random number of fingers to chop off in the beginning of the game
-
-During a turn:
-- Person selects the die they want to roll and the hand they want to roll it with
-- The person may also choose to swap the location of two items on the board
-- The person then rolls the die. Each value on the die corresponds to a finger on the hand they rolled with
- - If the value on the die corresponds to a finger that is still attached OR is a six, the person is allowed to chop of one finger on one of their own hands or one of their opponents' hands
- - If the value on the die corresponds to a finger that has already been chopped off, the person is allowed to choose one item that corresponds to the positions of their missing fingers
-
-In between turns:
-- The audience has a random chance to take a poll to add or remove something from the game. These things could include:
- - Replacing one of the dice on the board
- - Replacing one of the items on the board
- - Removing one of your fingers/your opponents fingers
- - Adding one of your fingers/your opponents fingers back
-- If there are no more items left on the board, 5 new items are placed down
-
- */
