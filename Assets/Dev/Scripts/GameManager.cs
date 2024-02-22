@@ -189,13 +189,12 @@ public class GameManager : Singleton<GameManager> {
 
 		// Reset all references to the selection
 		DisableDieSelection(clearSelectedDice: true);
-		DisableHandSelection(clearSelectedHands: true);
 		DisableItemSelection(clearSelectedItems: true);
 
 		// Determine what the active person can do based on the die value
 		// If the rolled finger is not null or the die value is 6, then the active person can chop off a finger
 		// If the rolled finger is null, then the active person can choose an item to use
-		if (rolledFinger != null || dieValue == 6) {
+		if (rolledFinger.FingerState != FingerState.CUT || dieValue == 6) {
 			GameState = GameState.CUT_FINGER;
 		} else {
 			GameState = GameState.CHOOSE_ITEM;
@@ -211,6 +210,7 @@ public class GameManager : Singleton<GameManager> {
 	private IEnumerator HandleCutFingerState ( ) {
 		// Wait until the active person selects a finger
 		EnableFingerSelection(anyFinger: true);
+		DisableHandSelection(clearSelectedHands: true);
 		yield return new WaitUntil(( ) => selectedFingers.Count == 1);
 
 		// Cut off the finger that is selected
@@ -231,7 +231,9 @@ public class GameManager : Singleton<GameManager> {
 		// Wait until the active person selects an item
 		EnableItemSelection( );
 		yield return new WaitUntil(( ) => selectedItems.Count == 1);
+		Debug.Log($"Item selected: {selectedItems[0].Name}");
 		DisableItemSelection( );
+		DisableHandSelection(clearSelectedHands: true);
 
 		// Based on the item that was selected, perform that items specific actions
 		switch (selectedItems[0].Name) {
@@ -335,7 +337,9 @@ public class GameManager : Singleton<GameManager> {
 		yield return new WaitForSeconds(Random.Range(1f, 2.5f));
 
 		// Select a random item
-		SelectItem(ItemManager.Instance.GetRandomItems(1)[0]);
+		while (selectedItems.Count == 0) {
+			SelectItem(ItemManager.Instance.GetRandomItems(1)[0]);
+		}
 
 		yield return null;
 	}
@@ -373,6 +377,11 @@ public class GameManager : Singleton<GameManager> {
 	public void SelectItem (Item item) {
 		// If an item cannot be selected right now, return
 		if (!CanSelectItems) {
+			return;
+		}
+
+		// If a hand is selected and the item does not correspond with a finger that is cut, then do not select the item
+		if (selectedHands.Count == 1 && selectedHands[0].GetFingerAt(ItemManager.Instance.GetItemIndex(item)).FingerState != FingerState.CUT) {
 			return;
 		}
 

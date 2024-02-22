@@ -77,9 +77,9 @@ public class Die : MonoBehaviour {
 	/// <returns>A random integer face value on the die</returns>
 	public IEnumerator Roll ( ) {
 		// Generate random force vectors to apply to the die
-		float linearX = Random.Range(-0.1f, 0.1f);
-		float linearY = Random.Range(0f, 1f);
-		float linearZ = Random.Range(-0.1f, 0.1f);
+		float linearX = Random.Range(-0.05f, 0.05f);
+		float linearY = 1f;
+		float linearZ = Random.Range(-0.05f, 0.05f);
 		Vector3 linearVector = new Vector3(linearX, linearY, linearZ).normalized * maxLinearVelocity;
 
 		float angularX = Random.Range(-1f, 1f);

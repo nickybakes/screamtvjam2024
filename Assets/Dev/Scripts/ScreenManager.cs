@@ -20,6 +20,7 @@ public class ScreenManager : Singleton<ScreenManager> {
 	[SerializeField] private Sprite pollOutlineSprite;
 	[SerializeField] private Person player;
 	[SerializeField] private Person opponent;
+	[SerializeField] private AudioSource audioSource;
 	[Header("Properties")]
 	[SerializeField] private ScreenState _screenState;
 	[SerializeField] private List<string> usernameList;
@@ -160,9 +161,20 @@ public class ScreenManager : Singleton<ScreenManager> {
 
 		// Loop and enable each bar from bottom to top
 		while (barCounter > 0) {
+			// Get whether or not the current bar on screen for the player and opponent should be enabled based on the audience rating
+			bool playerBarEnabled = (barCounter > 10 - PlayerAudienceRating);
+			bool opponentBarEnabled = (barCounter > PlayerAudienceRating);
+
+			// If both the player and opponent bars are not going to enabled any further, break from the loop
+			if (!playerBarEnabled && !opponentBarEnabled) {
+				break;
+			}
+
 			// Activate specific bars based on the player's and opponent's audience rating
-			playerBarList[barCounter - 1].enabled = (barCounter > 10 - PlayerAudienceRating);
-			opponentBarList[barCounter - 1].enabled = (barCounter > PlayerAudienceRating);
+			playerBarList[barCounter - 1].enabled = playerBarEnabled;
+			opponentBarList[barCounter - 1].enabled = opponentBarEnabled;
+
+			audioSource.Play( );
 
 			barCounter--;
 			// This means that the entire animation will take 2 seconds (0.2s x 10 bars)

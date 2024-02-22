@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 using Random = UnityEngine.Random;
 
 public class ItemManager : Singleton<ItemManager> {
@@ -71,11 +72,10 @@ public class ItemManager : Singleton<ItemManager> {
 	/// <returns></returns>
 	public IEnumerator SwapItems (Item item1, Item item2) {
 		// Get the indices of the two inputted items in the current items list
-		int item1Index = Array.IndexOf(currentItems, item1);
-		int item2Index = Array.IndexOf(currentItems, item2);
+		int item1Index = GetItemIndex(item1);
+		int item2Index = GetItemIndex(item2);
 
 		// Swap the transform positions of the items
-		/// TODO: Tween positions of items as they are swapped
 		item1.transform.SetParent(itemPositions[item2Index], false);
 		item2.transform.SetParent(itemPositions[item1Index], false);
 
@@ -100,5 +100,14 @@ public class ItemManager : Singleton<ItemManager> {
 		}
 
 		yield return null;
+	}
+
+	/// <summary>
+	///		Get the index of an item in the current item list
+	/// </summary>
+	/// <param name="item">The item to get the index of</param>
+	/// <returns>The integer index</returns>
+	public int GetItemIndex (Item item) {
+		return Array.IndexOf(currentItems, item);
 	}
 }

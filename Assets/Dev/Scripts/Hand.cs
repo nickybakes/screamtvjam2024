@@ -51,7 +51,7 @@ public class Hand : MonoBehaviour {
 	/// </summary>
 	/// <param name="finger">The finger to cut</param>
 	public void CutFinger (Finger finger) {
-		CutFingerAt(Array.IndexOf(fingers, finger));
+		finger.Cut( );
 	}
 
 	/// <summary>
@@ -64,9 +64,7 @@ public class Hand : MonoBehaviour {
 			return;
 		}
 
-		Finger finger = fingers[fingerIndex];
-		fingers[fingerIndex] = null;
-		Destroy(finger.gameObject);
+		fingers[fingerIndex].Cut( );
 	}
 
 	/// <summary>

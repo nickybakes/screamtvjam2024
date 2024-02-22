@@ -48,7 +48,6 @@ public class Finger : MonoBehaviour {
 	public void Cut ( ) {
 		// Cut the finger from the hand
 		FingerState = FingerState.CUT;
-		Hand.CutFinger(this);
 	}
 
 	/// <summary>
